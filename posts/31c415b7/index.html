@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.ico">
+  <link rel="mask-icon" href="/images/favicon.ico" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-minimal.min.css">
+  <script src="/lib/pace/pace.min.js"></script>
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="使用python对豆瓣进行评论爬取，并数据可视化    前言对豆瓣界面进行分析，没有前后端分离，对界面元素分析后，爬取相关信息并保存在csv表格中，然后进行数据分析。 提示：以下是本篇文章正文内容，下面案例可供参考 一、思路分析分析豆瓣页面数据，以及怎样实现循环爬取。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="爬取豆瓣评论并进行数据可视化">
+<meta property="og:url" content="http://example.com/posts/31c415b7/index.html">
+<meta property="og:site_name" content="故人的博客">
+<meta property="og:description" content="使用python对豆瓣进行评论爬取，并数据可视化    前言对豆瓣界面进行分析，没有前后端分离，对界面元素分析后，爬取相关信息并保存在csv表格中，然后进行数据分析。 提示：以下是本篇文章正文内容，下面案例可供参考 一、思路分析分析豆瓣页面数据，以及怎样实现循环爬取。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20210103191844540.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0hhbmRzb21lRmlzaG1hbg==,size_16,color_FFFFFF,t_70">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20210103192008970.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0hhbmRzb21lRmlzaG1hbg==,size_16,color_FFFFFF,t_70">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20210103192120312.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0hhbmRzb21lRmlzaG1hbg==,size_16,color_FFFFFF,t_70">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20210103192914142.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0hhbmRzb21lRmlzaG1hbg==,size_16,color_FFFFFF,t_70">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20210103193316430.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0hhbmRzb21lRmlzaG1hbg==,size_16,color_FFFFFF,t_70">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20210103193418469.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0hhbmRzb21lRmlzaG1hbg==,size_16,color_FFFFFF,t_70">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20210103194704217.jpg?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0hhbmRzb21lRmlzaG1hbg==,size_16,color_FFFFFF,t_70">
+<meta property="article:published_time" content="2021-01-16T08:40:41.000Z">
+<meta property="article:modified_time" content="2021-01-16T08:41:49.084Z">
+<meta property="article:author" content="fanchen">
+<meta property="article:tag" content="Python">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://img-blog.csdnimg.cn/20210103191844540.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0hhbmRzb21lRmlzaG1hbg==,size_16,color_FFFFFF,t_70">
+
+<link rel="canonical" href="http://example.com/posts/31c415b7/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>爬取豆瓣评论并进行数据可视化 | 故人的博客</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">故人的博客</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/posts/31c415b7/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/1624.jpg">
+      <meta itemprop="name" content="fanchen">
+      <meta itemprop="description" content="学习分享博客">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="故人的博客">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          爬取豆瓣评论并进行数据可视化
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2021-01-16 16:40:41 / 修改时间：16:41:49" itemprop="dateCreated datePublished" datetime="2021-01-16T16:40:41+08:00">2021-01-16</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%88%AC%E8%99%AB%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">爬虫学习</span></a>
+                </span>
+            </span>
+
+          
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/posts/31c415b7/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/posts/31c415b7/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>4.2k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>4 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <font color=#999AAA >
+使用python对豆瓣进行评论爬取，并数据可视化
+</font>
+
+
+<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p><font color=#999AAA >对豆瓣界面进行分析，没有前后端分离，对界面元素分析后，爬取相关信息并保存在csv表格中，然后进行数据分析。</font></p>
+<p><font color=#999AAA >提示：以下是本篇文章正文内容，下面案例可供参考</p>
+<h1 id="一、思路分析"><a href="#一、思路分析" class="headerlink" title="一、思路分析"></a>一、思路分析</h1><p>分析豆瓣页面数据，以及怎样实现循环爬取。<br><img src="https://img-blog.csdnimg.cn/20210103191844540.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0hhbmRzb21lRmlzaG1hbg==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<a id="more"></a>
+
+<p>解析到class为review-list  的div中，存放着一片div列表，也就是评论界面。<br><img src="https://img-blog.csdnimg.cn/20210103192008970.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0hhbmRzb21lRmlzaG1hbg==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br>将其中的元素一一对应起来，接下来进行下一页爬取的分析。<br><img src="https://img-blog.csdnimg.cn/20210103192120312.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0hhbmRzb21lRmlzaG1hbg==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br>get请求携带的start参数改变，并且步长是20，也就是20条数据。也就是说，循环请求的地址为：<br><a target="_blank" rel="noopener" href="https://movie.douban.com/subject/27069428/reviews?start=0">https://movie.douban.com/subject/27069428/reviews?start=0</a><br><a target="_blank" rel="noopener" href="https://movie.douban.com/subject/27069428/reviews?start=20">https://movie.douban.com/subject/27069428/reviews?start=20</a><br><a target="_blank" rel="noopener" href="https://movie.douban.com/subject/27069428/reviews?start=40">https://movie.douban.com/subject/27069428/reviews?start=40</a><br><a target="_blank" rel="noopener" href="https://movie.douban.com/subject/27069428/reviews?start=60">https://movie.douban.com/subject/27069428/reviews?start=60</a><br>……<br>接下来进行代码的编写。</p>
+<h1 id="二、代码编写"><a href="#二、代码编写" class="headerlink" title="二、代码编写"></a>二、代码编写</h1><h2 id="1-引入库"><a href="#1-引入库" class="headerlink" title="1.引入库"></a>1.引入库</h2><p><font color=#999AAA >代码如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> csv</span><br><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">from</span> lxml <span class="keyword">import</span> etree</span><br><span class="line"><span class="keyword">import</span> random</span><br><span class="line"><span class="keyword">from</span> fake_useragent <span class="keyword">import</span> UserAgent</span><br><span class="line"></span><br><span class="line"><span class="comment"># 伪装头</span></span><br><span class="line">headers = &#123;</span><br><span class="line">    <span class="string">&#x27;User-Agent&#x27;</span>: UserAgent().random,</span><br><span class="line">    <span class="string">&#x27;Host&#x27;</span>: <span class="string">&#x27;movie.douban.com&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;Connection&#x27;</span>: <span class="string">&#x27;keep-alive&#x27;</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="comment"># 遍历用的url模板</span></span><br><span class="line">base_url = <span class="string">&#x27;https://movie.douban.com/subject/27069428/reviews?start=&#123;&#125;&#x27;</span></span><br><span class="line"><span class="comment"># 代理池</span></span><br><span class="line">proxy_pool = [&#123;<span class="string">&#x27;http&#x27;</span>: <span class="string">&#x27;http://123.169.118.8:9999&#x27;</span>&#125;, &#123;<span class="string">&#x27;http&#x27;</span>: <span class="string">&#x27;http://175.43.154.137:9999&#x27;</span>&#125;, &#123;<span class="string">&#x27;http&#x27;</span>: <span class="string">&#x27;http://117.91.165.126:9999&#x27;</span>&#125;, &#123;<span class="string">&#x27;http&#x27;</span>: <span class="string">&#x27;http://113.124.86.125:9999&#x27;</span>&#125;]</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h2 id="2-解析页面数据"><a href="#2-解析页面数据" class="headerlink" title="2.解析页面数据"></a>2.解析页面数据</h2><p><font color=#999AAA >代码如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_detail</span>(<span class="params">url</span>):</span></span><br><span class="line">	<span class="comment"># 网页请求</span></span><br><span class="line">    response = requests.get(url=url, headers=headers, proxies=random.choice(proxy_pool)).text</span><br><span class="line">    response_data = etree.HTML(response)</span><br><span class="line">    <span class="comment"># etree解析网页 获得评论的div列表</span></span><br><span class="line">    div_list = response_data.xpath(<span class="string">&#x27;//div[@class=&quot;review-list  &quot;]/div&#x27;</span>)</span><br><span class="line">    <span class="keyword">for</span> div <span class="keyword">in</span> div_list:</span><br><span class="line">        <span class="comment"># 获取对应的数据 评论人 评价 评论时间 评论标题 评论主体 赞成数 反对数 回复数</span></span><br><span class="line">        name = div.xpath(<span class="string">&#x27;./div/header/a[@class=&quot;name&quot;]/text()&#x27;</span>)[<span class="number">0</span>]</span><br><span class="line">        level = div.xpath(<span class="string">&#x27;./div/header/span[1]/@title&#x27;</span>)</span><br><span class="line">        <span class="comment"># 有的评价为空 list列表取[0]会报错</span></span><br><span class="line">        <span class="keyword">if</span> <span class="built_in">len</span>(level):</span><br><span class="line">            level = level[<span class="number">0</span>]</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            level = <span class="string">&#x27;暂无评价&#x27;</span></span><br><span class="line">        time = div.xpath(<span class="string">&#x27;./div/header/span[@class=&quot;main-meta&quot;]/text()&#x27;</span>)[<span class="number">0</span>]</span><br><span class="line">        title = div.xpath(<span class="string">&#x27;./div/div/h2/a/text()&#x27;</span>)[<span class="number">0</span>]</span><br><span class="line">        content = <span class="string">&quot;&quot;</span>.join(div.xpath(<span class="string">&#x27;./div/div/div[1]/div[@class=&quot;short-content&quot;]/text()&#x27;</span>)).replace(<span class="string">&quot;\n&quot;</span>,</span><br><span class="line">                                                            <span class="string">&quot;&quot;</span>).replace(<span class="string">&quot; &quot;</span>, <span class="string">&quot;&quot;</span>).split(<span class="string">&quot;...&quot;</span>)[<span class="number">0</span>]</span><br><span class="line">        up = div.xpath(<span class="string">&#x27;./div/div/div[@class=&quot;action&quot;]/a[1]/span/text()&#x27;</span>)[<span class="number">0</span>].replace(<span class="string">&quot;\n&quot;</span>, <span class="string">&quot;&quot;</span>).replace(<span class="string">&quot; &quot;</span>, <span class="string">&quot;&quot;</span>)</span><br><span class="line">        down = div.xpath(<span class="string">&#x27;./div/div/div[@class=&quot;action&quot;]/a[2]/span/text()&#x27;</span>)[<span class="number">0</span>].replace(<span class="string">&quot;\n&quot;</span>, <span class="string">&quot;&quot;</span>).replace(<span class="string">&quot; &quot;</span>, <span class="string">&quot;&quot;</span>)</span><br><span class="line">        reply = div.xpath(<span class="string">&#x27;./div/div/div[@class=&quot;action&quot;]/a[3]/text()&#x27;</span>)[<span class="number">0</span>]</span><br><span class="line">        detail = [name, level, time, title, content, up, down, reply]</span><br><span class="line">        <span class="comment"># 返回对应的一条数据</span></span><br><span class="line">        <span class="keyword">yield</span> detail</span><br></pre></td></tr></table></figure>
+<hr style=" border:solid; width:100px; height:1px;" color=#000000 size=1">
+
+<h2 id="3-编写主函数"><a href="#3-编写主函数" class="headerlink" title="3.编写主函数"></a>3.编写主函数</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    <span class="comment"># 打开表格文件 注意编码格式</span></span><br><span class="line">    file = <span class="built_in">open</span>(<span class="string">&#x27;有翡.csv&#x27;</span>, <span class="string">&#x27;w&#x27;</span>, newline=<span class="string">&#x27;&#x27;</span>, encoding=<span class="string">&#x27;utf-8-sig&#x27;</span>)</span><br><span class="line">    writer = csv.writer(file)</span><br><span class="line">    <span class="comment"># 写表格的头部</span></span><br><span class="line">    writer.writerow([<span class="string">&#x27;评论人&#x27;</span>, <span class="string">&#x27;评价&#x27;</span>, <span class="string">&#x27;评论时间&#x27;</span>, <span class="string">&#x27;评论标题&#x27;</span>, <span class="string">&#x27;评论主体&#x27;</span>, <span class="string">&#x27;赞成数&#x27;</span>, <span class="string">&#x27;反对数&#x27;</span>, <span class="string">&#x27;回复数&#x27;</span>])</span><br><span class="line">    <span class="comment"># 循环遍历 爬取所有评论</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">0</span>, <span class="number">1101</span>, <span class="number">20</span>):</span><br><span class="line">        print(<span class="string">&#x27;正在爬取start=&#123;&#125;的数据&#x27;</span>.<span class="built_in">format</span>(i))</span><br><span class="line">        <span class="comment"># 获得返回的数据</span></span><br><span class="line">        res = get_detail(base_url.<span class="built_in">format</span>(i))</span><br><span class="line">        <span class="comment"># 数据写入</span></span><br><span class="line">        writer.writerows(res)</span><br></pre></td></tr></table></figure>
+<p>结果表格为：<br><img src="https://img-blog.csdnimg.cn/20210103192914142.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0hhbmRzb21lRmlzaG1hbg==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<hr style=" border:solid; width:100px; height:1px;" color=#000000 size=1">
+
+<h2 id="4-词云"><a href="#4-词云" class="headerlink" title="4.词云"></a>4.词云</h2><p>直接上代码：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line"><span class="keyword">from</span> wordcloud <span class="keyword">import</span> WordCloud</span><br><span class="line"><span class="keyword">import</span> jieba</span><br><span class="line"></span><br><span class="line">all_content = <span class="string">&#x27;&#x27;</span></span><br><span class="line">list_txt = []</span><br><span class="line">data = pd.read_csv(<span class="string">&#x27;test.csv&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> data[<span class="string">&#x27;评论标题&#x27;</span>]:</span><br><span class="line">    all_content += <span class="built_in">str</span>(i)</span><br><span class="line"><span class="keyword">for</span> c <span class="keyword">in</span> jieba.cut(all_content):</span><br><span class="line">    <span class="keyword">if</span> <span class="built_in">len</span>(c) &gt;= <span class="number">2</span>:</span><br><span class="line">        list_txt.append(c)</span><br><span class="line">cut_text = <span class="string">&quot; &quot;</span>.join(list_txt)</span><br><span class="line">wordcloud = WordCloud(font_path=<span class="string">&quot;C:/Windows/Fonts/simfang.ttf&quot;</span>,</span><br><span class="line">                      background_color=<span class="string">&#x27;white&#x27;</span>,</span><br><span class="line">                      scale=<span class="number">32</span>,</span><br><span class="line">                      mode=<span class="string">&#x27;RGBA&#x27;</span>,</span><br><span class="line">                      margin=<span class="number">1</span>).generate(cut_text)</span><br><span class="line">filename = <span class="string">&quot;test.png&quot;</span></span><br><span class="line">wordcloud.to_file(filename)</span><br><span class="line">os.startfile(filename)</span><br></pre></td></tr></table></figure>
+<p><strong>两张结果图片分别为：</strong></p>
+<p>评论标题：<br><img src="https://img-blog.csdnimg.cn/20210103193316430.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0hhbmRzb21lRmlzaG1hbg==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br>评论主体：<br><img src="https://img-blog.csdnimg.cn/20210103193418469.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0hhbmRzb21lRmlzaG1hbg==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br>在舍友的指点下，成功将词云的代码只用一行实现，代码如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line"><span class="keyword">from</span> wordcloud <span class="keyword">import</span> WordCloud</span><br><span class="line"><span class="keyword">import</span> jieba</span><br><span class="line"></span><br><span class="line">WordCloud(font_path=<span class="string">&quot;C:/Windows/Fonts/simfang.ttf&quot;</span>, background_color=<span class="string">&#x27;white&#x27;</span>, scale=<span class="number">16</span>).generate(<span class="string">&quot; &quot;</span>.join([c <span class="keyword">for</span> c <span class="keyword">in</span> jieba.cut(<span class="string">&quot;&quot;</span>.join(<span class="built_in">str</span>((pd.read_csv(<span class="string">&#x27;test.csv&#x27;</span>)[<span class="string">&#x27;评论主体&#x27;</span>]).tolist()))) <span class="keyword">if</span> <span class="built_in">len</span>(c) &gt; <span class="number">1</span>])).to_file(<span class="string">&quot;test.png&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<h2 id="5-评分柱状图"><a href="#5-评分柱状图" class="headerlink" title="5.评分柱状图"></a>5.评分柱状图</h2><p>数据清洗直接上代码：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"></span><br><span class="line">data = pd.read_csv(<span class="string">&#x27;test.csv&#x27;</span>)[<span class="string">&#x27;评价&#x27;</span>]</span><br><span class="line">star = []</span><br><span class="line"><span class="keyword">for</span> level <span class="keyword">in</span> data:</span><br><span class="line">    <span class="keyword">if</span> level == <span class="string">&#x27;力荐&#x27;</span>:</span><br><span class="line">        star.append(<span class="number">5</span>)</span><br><span class="line">    <span class="keyword">elif</span> level == <span class="string">&#x27;推荐&#x27;</span>:</span><br><span class="line">        star.append(<span class="number">4</span>)</span><br><span class="line">    <span class="keyword">elif</span> level == <span class="string">&#x27;还行&#x27;</span>:</span><br><span class="line">        star.append(<span class="number">3</span>)</span><br><span class="line">    <span class="keyword">elif</span> level == <span class="string">&#x27;较差&#x27;</span>:</span><br><span class="line">        star.append(<span class="number">2</span>)</span><br><span class="line">    <span class="keyword">elif</span> level == <span class="string">&#x27;很差&#x27;</span>:</span><br><span class="line">        star.append(<span class="number">1</span>)</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        star.append(<span class="number">0</span>)</span><br><span class="line">plt.rcParams[<span class="string">&#x27;font.sans-serif&#x27;</span>] = [<span class="string">&#x27;SimHei&#x27;</span>]</span><br><span class="line">plt.figure(figsize=(<span class="number">12</span>, <span class="number">8</span>))</span><br><span class="line">plt.hist(star, bins=<span class="number">17</span>)</span><br><span class="line">plt.xlabel(<span class="string">&#x27;评价等级（0表示没有评分）&#x27;</span>, size=<span class="number">18</span>)</span><br><span class="line">plt.ylabel(<span class="string">&#x27;人数&#x27;</span>, size=<span class="number">20</span>)</span><br><span class="line">plt.savefig(<span class="string">&#x27;评分.jpg&#x27;</span>)</span><br></pre></td></tr></table></figure>
+<p>结果图：<br><img src="https://img-blog.csdnimg.cn/20210103194704217.jpg?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0hhbmRzb21lRmlzaG1hbg==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p><font color=#999AAA >以上就是今天要讲的内容，本文仅仅简单介绍了爬虫的使用和数据可视化的冰山一角，以后再见吧！<br><strong>注：案例仅供学习</strong></p>
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>fanchen
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://example.com/posts/31c415b7/" title="爬取豆瓣评论并进行数据可视化">http://example.com/posts/31c415b7/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.zh" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-ND</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/Python/" rel="tag"><i class="fa fa-tag"></i> Python</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/posts/2e361f77/" rel="prev" title="爬取链家二手房信息并存储到数据库">
+      <i class="fa fa-chevron-left"></i> 爬取链家二手房信息并存储到数据库
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/posts/f027b801/" rel="next" title="selenium自动化操作问卷星">
+      selenium自动化操作问卷星 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-text">前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E6%80%9D%E8%B7%AF%E5%88%86%E6%9E%90"><span class="nav-text">一、思路分析</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E4%BB%A3%E7%A0%81%E7%BC%96%E5%86%99"><span class="nav-text">二、代码编写</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E5%BC%95%E5%85%A5%E5%BA%93"><span class="nav-text">1.引入库</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-%E8%A7%A3%E6%9E%90%E9%A1%B5%E9%9D%A2%E6%95%B0%E6%8D%AE"><span class="nav-text">2.解析页面数据</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-%E7%BC%96%E5%86%99%E4%B8%BB%E5%87%BD%E6%95%B0"><span class="nav-text">3.编写主函数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-%E8%AF%8D%E4%BA%91"><span class="nav-text">4.词云</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-%E8%AF%84%E5%88%86%E6%9F%B1%E7%8A%B6%E5%9B%BE"><span class="nav-text">5.评分柱状图</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-text">总结</span></a></li></ol></div>
+		
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="fanchen"
+      src="/images/1624.jpg">
+  <p class="site-author-name" itemprop="name">fanchen</p>
+  <div class="site-description" itemprop="description">学习分享博客</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">10</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/88Fanchen" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;88Fanchen" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/u/5604026157" title="Weibo → https:&#x2F;&#x2F;weibo.com&#x2F;u&#x2F;5604026157" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i>Weibo</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://blog.csdn.net/HandsomeFishman" title="CSDN → https:&#x2F;&#x2F;blog.csdn.net&#x2F;HandsomeFishman" rel="noopener" target="_blank"><i class="fa fa-copyright fa-fw"></i>CSDN</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://music.163.com/#/user/home?id=292533972" title="网易云音乐 → https:&#x2F;&#x2F;music.163.com&#x2F;#&#x2F;user&#x2F;home?id&#x3D;292533972" rel="noopener" target="_blank"><i class="fa fa-music fa-fw"></i>网易云音乐</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title"><i class="fa fa-link fa-fw"></i>
+      友情链接
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://blog.nanshaobit.top/" title="https:&#x2F;&#x2F;blog.nanshaobit.top&#x2F;" rel="noopener" target="_blank">NaoShaoBit</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+	
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-edit"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">fanchen</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+    <span title="站点总字数">38k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">34 分钟</span>
+</div>
+<!--
+-->
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  
+  <script color='0,0,0' opacity='0.5' zIndex='-1' count='99' src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : '7Se5U4rhmGGbwbSuqREqfgL6-gzGzoHsz',
+      appKey     : 't8bFvudow7MVVB72MSqukGQL',
+      placeholder: "Just go go",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : '' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"log":false,"model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"right","width":113,"height":300},"mobile":{"show":true}});</script></body>
+</html>

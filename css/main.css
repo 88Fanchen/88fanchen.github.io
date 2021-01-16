@@ -986,8 +986,8 @@ pre .javascript .function {
   padding: 0 10px;
 }
 .headband {
-  background: $white-deep;
-  height: 3px;
+  background: $headband-bg;
+  height: 0px;
 }
 .site-meta {
   flex-grow: 1;
@@ -1195,7 +1195,7 @@ pre .javascript .function {
 }
 .links-of-author a::before,
 .links-of-author span.exturl::before {
-  background: #e2b8ff;
+  background: #26700a;
   border-radius: 50%;
   content: ' ';
   display: inline-block;

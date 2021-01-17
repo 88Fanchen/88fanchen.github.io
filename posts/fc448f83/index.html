@@ -14,12 +14,13 @@
 
 
 <link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
   <link rel="stylesheet" href="/lib/pace/pace-theme-minimal.min.css">
   <script src="/lib/pace/pace.min.js"></script>
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
   <meta name="description" content="用过B站的小伙伴们都知道，B站的弹幕是一绝。 今天我们爬取指定bv号视频下的弹幕，添加到csv文件中并制作成词云。   优化后的完整代码：代码地址 一、分析弹幕的接口url地址这里有两个地址可以实现爬取弹幕，一个是有限条的，另一个则是根据日期循环爬取，可以实现所有弹幕的爬取。案例是冰冰的vlog.001">
@@ -42,7 +43,7 @@
 <meta property="og:image" content="https://img-blog.csdnimg.cn/20210104121629776.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0hhbmRzb21lRmlzaG1hbg==,size_16,color_FFFFFF,t_70">
 <meta property="og:image" content="https://img-blog.csdnimg.cn/20210104121736154.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0hhbmRzb21lRmlzaG1hbg==,size_16,color_FFFFFF,t_70">
 <meta property="article:published_time" content="2021-01-16T08:45:26.000Z">
-<meta property="article:modified_time" content="2021-01-16T09:29:30.723Z">
+<meta property="article:modified_time" content="2021-01-17T03:15:49.440Z">
 <meta property="article:author" content="fanchen">
 <meta property="article:tag" content="Python">
 <meta name="twitter:card" content="summary">
@@ -225,10 +226,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2021-01-16 16:45:26 / 修改时间：17:29:30" itemprop="dateCreated datePublished" datetime="2021-01-16T16:45:26+08:00">2021-01-16</time>
+              <time title="创建时间：2021-01-16 16:45:26" itemprop="dateCreated datePublished" datetime="2021-01-16T16:45:26+08:00">2021-01-16</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-01-17 11:15:49" itemprop="dateModified" datetime="2021-01-17T11:15:49+08:00">2021-01-17</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
@@ -284,12 +291,12 @@
 </font>
 
 <p>优化后的完整代码：<a target="_blank" rel="noopener" href="https://blog.csdn.net/HandsomeFishman/article/details/112309330">代码地址</a></p>
-<h1 id="一、分析弹幕的接口url地址"><a href="#一、分析弹幕的接口url地址" class="headerlink" title="一、分析弹幕的接口url地址"></a>一、分析弹幕的接口url地址</h1><p><font color=#999AAA >这里有两个地址可以实现爬取弹幕，一个是有限条的，另一个则是根据日期循环爬取，可以实现所有弹幕的爬取。</font><br>案例是冰冰的vlog.001<br><img src="https://img-blog.csdnimg.cn/2021010412201182.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0hhbmRzb21lRmlzaG1hbg==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<h1 id="一、分析弹幕的接口url地址"><a href="#一、分析弹幕的接口url地址" class="headerlink" title="一、分析弹幕的接口url地址"></a>一、分析弹幕的接口url地址</h1><p><font color=#999AAA >这里有两个地址可以实现爬取弹幕，一个是有限条的，另一个则是根据日期循环爬取，可以实现所有弹幕的爬取。</font><br>案例是冰冰的vlog.001<br><img src="https://img-blog.csdnimg.cn/2021010412201182.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0hhbmRzb21lRmlzaG1hbg==,size_16,color_FFFFFF,t_70"></p>
 <a id="more"></a>
 
 <p>第一个不需要登录就可以爬取的接口为：</p>
 <figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://comment.bilibili.com/&#123;oid/cid&#125;.xml</span><br></pre></td></tr></table></figure>
-<p>我抓包抓了很久也没有找到这样的包，b站现在把弹幕的接口藏得很深…不是很好找，最后是看着别人的博客在移动端的网页js中找到了这样的请求地址。<br><img src="https://img-blog.csdnimg.cn/20210104114429984.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0hhbmRzb21lRmlzaG1hbg==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br>可以看到返回的结果是一个xml界面，只需要请求这个界面使用xpath对其进行定位就可以很容易的获取到自己想要的数据。<br><strong>那么我们现在来分析第二个接口：</strong><br><img src="https://img-blog.csdnimg.cn/20210104114644958.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0hhbmRzb21lRmlzaG1hbg==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br>可以看到右侧有一个弹幕历史的功能，我们先把抓包记录清除一下，点击按钮看看有什么新抓到的包：<br><img src="https://img-blog.csdnimg.cn/20210104114811377.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0hhbmRzb21lRmlzaG1hbg==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br>可以看到这里出现了一个新的请求，内容是这样的：<br><img src="https://img-blog.csdnimg.cn/20210104114937972.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0hhbmRzb21lRmlzaG1hbg==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br>这不就是对应的日期嘛，不用想，请求头中肯定会有对应的月份数据，按月份来分组，达到这样的日历点击效果。果然：<br><img src="https://img-blog.csdnimg.cn/20210104115154902.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0hhbmRzb21lRmlzaG1hbg==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br>点击十二月后，有了新的请求：<br><img src="https://img-blog.csdnimg.cn/20210104115253993.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0hhbmRzb21lRmlzaG1hbg==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br>因为这个视频是12-31号发布的，所以十二月只有这一个数据。<br>点击具体的一天后：<br><img src="https://img-blog.csdnimg.cn/20210104115450413.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0hhbmRzb21lRmlzaG1hbg==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br>弹幕的数据就出现了：<br><img src="https://img-blog.csdnimg.cn/2021010411552953.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0hhbmRzb21lRmlzaG1hbg==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br>所以我们只需要请求对应的日期索引（以月份分组），再循环遍历发送请求就好了，这里需要登录，所以我们使用到cookie，接下来看代码编写。</p>
+<p>我抓包抓了很久也没有找到这样的包，b站现在把弹幕的接口藏得很深…不是很好找，最后是看着别人的博客在移动端的网页js中找到了这样的请求地址。<br><img src="https://img-blog.csdnimg.cn/20210104114429984.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0hhbmRzb21lRmlzaG1hbg==,size_16,color_FFFFFF,t_70"><br>可以看到返回的结果是一个xml界面，只需要请求这个界面使用xpath对其进行定位就可以很容易的获取到自己想要的数据。<br><strong>那么我们现在来分析第二个接口：</strong><br><img src="https://img-blog.csdnimg.cn/20210104114644958.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0hhbmRzb21lRmlzaG1hbg==,size_16,color_FFFFFF,t_70"><br>可以看到右侧有一个弹幕历史的功能，我们先把抓包记录清除一下，点击按钮看看有什么新抓到的包：<br><img src="https://img-blog.csdnimg.cn/20210104114811377.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0hhbmRzb21lRmlzaG1hbg==,size_16,color_FFFFFF,t_70"><br>可以看到这里出现了一个新的请求，内容是这样的：<br><img src="https://img-blog.csdnimg.cn/20210104114937972.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0hhbmRzb21lRmlzaG1hbg==,size_16,color_FFFFFF,t_70"><br>这不就是对应的日期嘛，不用想，请求头中肯定会有对应的月份数据，按月份来分组，达到这样的日历点击效果。果然：<br><img src="https://img-blog.csdnimg.cn/20210104115154902.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0hhbmRzb21lRmlzaG1hbg==,size_16,color_FFFFFF,t_70"><br>点击十二月后，有了新的请求：<br><img src="https://img-blog.csdnimg.cn/20210104115253993.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0hhbmRzb21lRmlzaG1hbg==,size_16,color_FFFFFF,t_70"><br>因为这个视频是12-31号发布的，所以十二月只有这一个数据。<br>点击具体的一天后：<br><img src="https://img-blog.csdnimg.cn/20210104115450413.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0hhbmRzb21lRmlzaG1hbg==,size_16,color_FFFFFF,t_70"><br>弹幕的数据就出现了：<br><img src="https://img-blog.csdnimg.cn/2021010411552953.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0hhbmRzb21lRmlzaG1hbg==,size_16,color_FFFFFF,t_70"><br>所以我们只需要请求对应的日期索引（以月份分组），再循环遍历发送请求就好了，这里需要登录，所以我们使用到cookie，接下来看代码编写。</p>
 <h1 id="二、代码编写"><a href="#二、代码编写" class="headerlink" title="二、代码编写"></a>二、代码编写</h1><h2 id="1-引入库"><a href="#1-引入库" class="headerlink" title="1.引入库"></a>1.引入库</h2><p><font color=#999AAA >代码如下：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">from</span> lxml <span class="keyword">import</span> etree</span><br><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line"><span class="keyword">from</span> wordcloud <span class="keyword">import</span> WordCloud</span><br><span class="line"><span class="keyword">import</span> jieba</span><br></pre></td></tr></table></figure>
 <h2 id="2-爬虫类编写"><a href="#2-爬虫类编写" class="headerlink" title="2.爬虫类编写"></a>2.爬虫类编写</h2><p><font color=#999AAA >初始化：</font></p>
@@ -301,8 +308,8 @@
 
 
 
-<h1 id="运行结果"><a href="#运行结果" class="headerlink" title="运行结果"></a>运行结果</h1><p><img src="https://img-blog.csdnimg.cn/20210104121710597.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0hhbmRzb21lRmlzaG1hbg==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
-<p><img src="https://img-blog.csdnimg.cn/20210104121629776.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0hhbmRzb21lRmlzaG1hbg==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br>可以看到有5000条数据。<br>词云如图：<br><img src="https://img-blog.csdnimg.cn/20210104121736154.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0hhbmRzb21lRmlzaG1hbg==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br><strong>注：案例仅供学习</strong></p>
+<h1 id="运行结果"><a href="#运行结果" class="headerlink" title="运行结果"></a>运行结果</h1><p><img src="https://img-blog.csdnimg.cn/20210104121710597.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0hhbmRzb21lRmlzaG1hbg==,size_16,color_FFFFFF,t_70" alt="运行结果"></p>
+<p><img src="https://img-blog.csdnimg.cn/20210104121629776.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0hhbmRzb21lRmlzaG1hbg==,size_16,color_FFFFFF,t_70" alt="结果表格"><br>可以看到有5000条数据。<br>词云如图：<br><img src="https://img-blog.csdnimg.cn/20210104121736154.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0hhbmRzb21lRmlzaG1hbg==,size_16,color_FFFFFF,t_70" alt="词云"><br><strong>注：案例仅供学习</strong></p>
 
     </div>
 
@@ -487,6 +494,36 @@
 </div>
 <!--
 -->
+<span>
+  <span class="post-meta-divider">|</span>
+  本站已运行
+  <span id="showDays"></span>
+</span>
+<script>
+  var seconds = 1000;
+  var minutes = seconds * 60;
+  var hours = minutes * 60;
+  var days = hours * 24;
+  var years = days * 365;
+  var birthDay = Date.UTC(2019,01,20,14,00,00); // 这里设置建站时间
+  setInterval(function() {
+    var today = new Date();
+    var todayYear = today.getFullYear();
+    var todayMonth = today.getMonth()+1;
+    var todayDate = today.getDate();
+    var todayHour = today.getHours();
+    var todayMinute = today.getMinutes();
+    var todaySecond = today.getSeconds();
+    var now = Date.UTC(todayYear,todayMonth,todayDate,todayHour,todayMinute,todaySecond);
+    var diff = now - birthDay;
+    var diffYears = Math.floor(diff/years);
+    var diffDays = Math.floor((diff/days)-diffYears*365);
+    var diffHours = Math.floor((diff-(diffYears*365+diffDays)*days)/hours);
+    var diffMinutes = Math.floor((diff-(diffYears*365+diffDays)*days-diffHours*hours)/minutes);
+    var diffSeconds = Math.floor((diff-(diffYears*365+diffDays)*days-diffHours*hours-diffMinutes*minutes)/seconds);
+      document.getElementById('showDays').innerHTML=""+diffYears+"年"+diffDays+"天"+diffHours+"小时"+diffMinutes+"分钟"+diffSeconds+"秒";
+  }, 1000);
+</script>
 
         
 
@@ -505,6 +542,8 @@
   
   <script color='0,0,0' opacity='0.5' zIndex='-1' count='99' src="/lib/canvas-nest/canvas-nest.min.js"></script>
   <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
   <script src="/lib/velocity/velocity.min.js"></script>
   <script src="/lib/velocity/velocity.ui.min.js"></script>
 
@@ -574,5 +613,5 @@ NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
 });
 </script>
 
-<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"log":false,"model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"right","width":113,"height":300},"mobile":{"show":true}});</script></body>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"log":false,"model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"right","width":113,"height":300},"mobile":{"show":false}});</script></body>
 </html>

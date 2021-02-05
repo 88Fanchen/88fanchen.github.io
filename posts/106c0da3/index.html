@@ -23,25 +23,23 @@
     var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="使用python对笔趣网小说进行逐页爬取。    前言这个网站的下载链接奇慢无比，闲来无事，使用python对其进行循环爬取。 以下是本篇文章正文内容，下面案例可供参考 一、页面分析很显然，这是书籍的详情页，我们在这个页面只需要两种数据，一个就是我们的书籍名称，还有就是对应章节的详情链接，只有获取了章节的详情链接我们才可以进行文字的爬取。">
+  <meta name="description" content="前言使用抖音的分享链接对其进行无水印的下载 对分享链接的网页进行分析，找到跳转的地址，在地址中找到url，请求对应的地址。 对得到的json文件进行分析，找到对应key下的数据下载链接，将其中的关键字替换，playwm替换成play即是完整的下载链接。 代码下面附上完整代码：">
 <meta property="og:type" content="article">
-<meta property="og:title" content="笔趣网整本小说爬取">
-<meta property="og:url" content="http://example.com/posts/cf49fdc5/index.html">
+<meta property="og:title" content="python实现抖音无水印下载">
+<meta property="og:url" content="http://example.com/posts/106c0da3/index.html">
 <meta property="og:site_name" content="故人的博客">
-<meta property="og:description" content="使用python对笔趣网小说进行逐页爬取。    前言这个网站的下载链接奇慢无比，闲来无事，使用python对其进行循环爬取。 以下是本篇文章正文内容，下面案例可供参考 一、页面分析很显然，这是书籍的详情页，我们在这个页面只需要两种数据，一个就是我们的书籍名称，还有就是对应章节的详情链接，只有获取了章节的详情链接我们才可以进行文字的爬取。">
+<meta property="og:description" content="前言使用抖音的分享链接对其进行无水印的下载 对分享链接的网页进行分析，找到跳转的地址，在地址中找到url，请求对应的地址。 对得到的json文件进行分析，找到对应key下的数据下载链接，将其中的关键字替换，playwm替换成play即是完整的下载链接。 代码下面附上完整代码：">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://img-blog.csdnimg.cn/20210117152047206.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0hhbmRzb21lRmlzaG1hbg==,size_16,color_FFFFFF,t_70">
-<meta property="og:image" content="https://img-blog.csdnimg.cn/20210117152300155.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0hhbmRzb21lRmlzaG1hbg==,size_16,color_FFFFFF,t_70">
-<meta property="og:image" content="https://img-blog.csdnimg.cn/20210117152403409.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0hhbmRzb21lRmlzaG1hbg==,size_16,color_FFFFFF,t_70">
-<meta property="og:image" content="https://img-blog.csdnimg.cn/20210117152713346.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0hhbmRzb21lRmlzaG1hbg==,size_16,color_FFFFFF,t_70">
-<meta property="article:published_time" content="2021-01-17T07:27:59.000Z">
-<meta property="article:modified_time" content="2021-01-17T07:29:05.980Z">
+<meta property="og:image" content="https://pic.rmb.bdstatic.com/bjh/3353e3f73d55e89186bf6729b7a22fb1.png">
+<meta property="og:image" content="https://pic.rmb.bdstatic.com/bjh/58304b8d5ec0ab43a9623b1de78658f1.png">
+<meta property="article:published_time" content="2021-02-01T13:42:15.000Z">
+<meta property="article:modified_time" content="2021-02-01T13:54:24.161Z">
 <meta property="article:author" content="fanchen">
 <meta property="article:tag" content="Python">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://img-blog.csdnimg.cn/20210117152047206.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0hhbmRzb21lRmlzaG1hbg==,size_16,color_FFFFFF,t_70">
+<meta name="twitter:image" content="https://pic.rmb.bdstatic.com/bjh/3353e3f73d55e89186bf6729b7a22fb1.png">
 
-<link rel="canonical" href="http://example.com/posts/cf49fdc5/">
+<link rel="canonical" href="http://example.com/posts/106c0da3/">
 
 
 <script id="page-configurations">
@@ -54,7 +52,7 @@
   };
 </script>
 
-  <title>笔趣网整本小说爬取 | 故人的博客</title>
+  <title>python实现抖音无水印下载 | 故人的博客</title>
   
 
 
@@ -201,7 +199,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/posts/cf49fdc5/">
+    <link itemprop="mainEntityOfPage" href="http://example.com/posts/106c0da3/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/1624.jpg">
@@ -214,7 +212,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          笔趣网整本小说爬取
+          python实现抖音无水印下载
         </h1>
 
         <div class="post-meta">
@@ -225,7 +223,7 @@
               <span class="post-meta-item-text">发表于</span>
               
 
-              <time title="创建时间：2021-01-17 15:27:59 / 修改时间：15:29:05" itemprop="dateCreated datePublished" datetime="2021-01-17T15:27:59+08:00">2021-01-17</time>
+              <time title="创建时间：2021-02-01 21:42:15 / 修改时间：21:54:24" itemprop="dateCreated datePublished" datetime="2021-02-01T21:42:15+08:00">2021-02-01</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -246,8 +244,8 @@
       </span>
       <span class="post-meta-item-text">Valine：</span>
     
-    <a title="valine" href="/posts/cf49fdc5/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/posts/cf49fdc5/" itemprop="commentCount"></span>
+    <a title="valine" href="/posts/106c0da3/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/posts/106c0da3/" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -257,7 +255,7 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>2.5k</span>
+              <span>2.1k</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
@@ -276,20 +274,15 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <font color=#999AAA >
-使用python对笔趣网小说进行逐页爬取。
-</font>
-
-
-<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p><font color=#999AAA >这个网站的下载链接奇慢无比，闲来无事，使用python对其进行循环爬取。</font></p>
-<p><font color=#999AAA >以下是本篇文章正文内容，下面案例可供参考</p>
-<h1 id="一、页面分析"><a href="#一、页面分析" class="headerlink" title="一、页面分析"></a>一、页面分析</h1><p><img src="https://img-blog.csdnimg.cn/20210117152047206.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0hhbmRzb21lRmlzaG1hbg==,size_16,color_FFFFFF,t_70"><br>很显然，这是书籍的详情页，我们在这个页面只需要两种数据，一个就是我们的书籍名称，还有就是对应章节的详情链接，只有获取了章节的详情链接我们才可以进行文字的爬取。</p>
+        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>使用抖音的分享链接对其进行无水印的下载</p>
+<p>对分享链接的网页进行分析，找到跳转的地址，在地址中找到url，请求对应的地址。</p>
+<p>对得到的json文件进行分析，找到对应key下的数据下载链接，将其中的关键字替换，playwm替换成play即是完整的下载链接。</p>
+<h1 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h1><p>下面附上完整代码：</p>
 <a id="more"></a>
 
-<p><img src="https://img-blog.csdnimg.cn/20210117152300155.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0hhbmRzb21lRmlzaG1hbg==,size_16,color_FFFFFF,t_70"><br>可以看出来这个界面很简单，也没什么反爬措施，轻而易举获得我们想要的数据。<br><img src="https://img-blog.csdnimg.cn/20210117152403409.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0hhbmRzb21lRmlzaG1hbg==,size_16,color_FFFFFF,t_70"><br>这里唯一要注意的就是获取的文字内容是list，我们需要在其中进行再遍历。<br>然后替换其中的换行之类的无用字符，最后写入到txt文件中。</p>
-<h1 id="二、代码编写"><a href="#二、代码编写" class="headerlink" title="二、代码编写"></a>二、代码编写</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">import</span> random</span><br><span class="line"><span class="keyword">from</span> fake_useragent <span class="keyword">import</span> UserAgent</span><br><span class="line"><span class="keyword">from</span> lxml <span class="keyword">import</span> etree</span><br><span class="line"></span><br><span class="line"><span class="comment"># 代理池</span></span><br><span class="line">proxy_pool = [&#123;<span class="string">&#x27;HTTP&#x27;</span>: <span class="string">&#x27;175.42.129.251:9999&#x27;</span>&#125;, &#123;<span class="string">&#x27;HTTP&#x27;</span>: <span class="string">&#x27;175.43.156.31:9999&#x27;</span>&#125;, &#123;<span class="string">&#x27;HTTP&#x27;</span>: <span class="string">&#x27;175.43.58.14:9999&#x27;</span>&#125;,</span><br><span class="line">              &#123;<span class="string">&#x27;HTTP&#x27;</span>: <span class="string">&#x27;120.84.101.48:9999&#x27;</span>&#125;, &#123;<span class="string">&#x27;HTTP&#x27;</span>: <span class="string">&#x27;223.247.164.191:9999&#x27;</span>&#125;, &#123;<span class="string">&#x27;HTTP&#x27;</span>: <span class="string">&#x27;182.46.121.25:9999&#x27;</span>&#125;,</span><br><span class="line">              &#123;<span class="string">&#x27;HTTP&#x27;</span>: <span class="string">&#x27;115.221.245.116:9999&#x27;</span>&#125;, &#123;<span class="string">&#x27;HTTP&#x27;</span>: <span class="string">&#x27;58.22.177.192:9999&#x27;</span>&#125;]</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 爬虫类</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">BiQuSpider</span>:</span></span><br><span class="line">    <span class="comment"># 初始化类中成员</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self, url</span>):</span></span><br><span class="line">        print(<span class="string">&#x27;正在初始化...&#x27;</span>)</span><br><span class="line">        self.url = url</span><br><span class="line">        self.headers = &#123;</span><br><span class="line">            <span class="string">&quot;Referer&quot;</span>: url,</span><br><span class="line">            <span class="string">&#x27;User-Agent&#x27;</span>: UserAgent().random</span><br><span class="line">        &#125;</span><br><span class="line">        self.bookName = <span class="literal">None</span></span><br><span class="line">        self.url_pool = []</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 获取章节链接</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">get_urls</span>(<span class="params">self</span>):</span></span><br><span class="line">        response = requests.get(url=self.url, headers=self.headers, proxies=random.choice(proxy_pool))</span><br><span class="line">        result = etree.HTML(response.content.decode())</span><br><span class="line">        title = result.xpath(<span class="string">&#x27;//div[@id=&quot;info&quot;]/h1/text()&#x27;</span>)[<span class="number">0</span>]</span><br><span class="line">        self.bookName = title</span><br><span class="line">        urls = result.xpath(<span class="string">&#x27;//div[@class=&quot;book_list&quot;]/ul/li&#x27;</span>)</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> urls:</span><br><span class="line">            url = <span class="string">&#x27;http://www.biquw.com/book/94/&#x27;</span> + i.xpath(<span class="string">&#x27;./a/@href&#x27;</span>)[<span class="number">0</span>]</span><br><span class="line">            self.url_pool.append(url)</span><br><span class="line">        print(<span class="string">&#x27;章节链接爬取完毕...&#x27;</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 文本内容解析处理</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">get_text</span>(<span class="params">self</span>):</span></span><br><span class="line">        <span class="keyword">for</span> url <span class="keyword">in</span> self.url_pool:</span><br><span class="line">            data = []</span><br><span class="line">            content_page = requests.get(url=url, headers=self.headers, proxies=random.choice(proxy_pool))</span><br><span class="line">            result = etree.HTML(content_page.content.decode())</span><br><span class="line">            content = result.xpath(<span class="string">&#x27;//div[@id=&quot;htmlContent&quot;]&#x27;</span>)[<span class="number">0</span>]</span><br><span class="line">            title = result.xpath(<span class="string">&#x27;//div[@class=&quot;h1title&quot;]/h1/text()&#x27;</span>)[<span class="number">0</span>]</span><br><span class="line">            print(<span class="string">&#x27;正在爬取&#123;&#125;&#x27;</span>.<span class="built_in">format</span>(title))</span><br><span class="line">            <span class="keyword">for</span> t <span class="keyword">in</span> content.xpath(<span class="string">&#x27;./text()&#x27;</span>):</span><br><span class="line">                text = t.replace(<span class="string">&quot;\n&quot;</span>, <span class="string">&quot;&quot;</span>).replace(<span class="string">&quot;\xa0&quot;</span>, <span class="string">&quot;&quot;</span>)</span><br><span class="line">                <span class="keyword">if</span> text:</span><br><span class="line">                    data.append(<span class="string">&#x27;   &#x27;</span> + text)</span><br><span class="line">            txt = <span class="string">&#x27;\n&#x27;</span>.join(data)</span><br><span class="line">            <span class="keyword">with</span> <span class="built_in">open</span>(<span class="string">&#x27;./&#123;&#125;.txt&#x27;</span>.<span class="built_in">format</span>(self.bookName), <span class="string">&#x27;a&#x27;</span>, encoding=<span class="string">&#x27;utf-8&#x27;</span>) <span class="keyword">as</span> w:</span><br><span class="line">                w.write(title + <span class="string">&#x27;\n&#x27;</span> + txt + <span class="string">&#x27;\n\n&#x27;</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 运行 调用方法</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">run</span>(<span class="params">self</span>):</span></span><br><span class="line">        self.get_urls()</span><br><span class="line">        self.get_text()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    spider = BiQuSpider(<span class="string">&#x27;http://www.biquw.com/book/94/&#x27;</span>)</span><br><span class="line">    spider.run()</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h1 id="结果"><a href="#结果" class="headerlink" title="结果"></a>结果</h1><p><img src="https://img-blog.csdnimg.cn/20210117152713346.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0hhbmRzb21lRmlzaG1hbg==,size_16,color_FFFFFF,t_70"></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> re</span><br><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">DouyinDownload</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self</span>):</span></span><br><span class="line">        self.headers = &#123;</span><br><span class="line">            <span class="string">&#x27;User-Agent&#x27;</span>: <span class="string">&#x27;Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1 Edg/88.0.4324.96&#x27;</span></span><br><span class="line">        &#125;</span><br><span class="line">        self.windows_headers = &#123;</span><br><span class="line">            <span class="string">&#x27;User-Agent&#x27;</span>: <span class="string">&#x27;Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.96 Safari/537.36 Edg/88.0.705.56&#x27;</span></span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">check_url</span>(<span class="params">self, url</span>):</span></span><br><span class="line">        response = requests.get(url=url, headers=self.windows_headers, allow_redirects=<span class="literal">False</span>)</span><br><span class="line">        <span class="keyword">if</span> response.headers.get(<span class="string">&#x27;location&#x27;</span>):</span><br><span class="line">            <span class="keyword">return</span> response.headers.get(<span class="string">&#x27;location&#x27;</span>)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            print(<span class="string">&#x27;解析失败&#x27;</span>)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">download</span>(<span class="params">self, url</span>):</span></span><br><span class="line">        response = requests.get(url=url, headers=self.windows_headers).json()</span><br><span class="line">        v_title = response[<span class="string">&#x27;item_list&#x27;</span>][<span class="number">0</span>][<span class="string">&#x27;share_info&#x27;</span>][<span class="string">&#x27;share_title&#x27;</span>]</span><br><span class="line">        download_url = response[<span class="string">&#x27;item_list&#x27;</span>][<span class="number">0</span>][<span class="string">&#x27;video&#x27;</span>][<span class="string">&#x27;play_addr&#x27;</span>][<span class="string">&#x27;url_list&#x27;</span>][<span class="number">0</span>].replace(<span class="string">&quot;playwm&quot;</span>, <span class="string">&quot;play&quot;</span>)</span><br><span class="line">        path = <span class="string">&#x27;F:\Spider\douyin&#x27;</span></span><br><span class="line">        data = requests.get(url=download_url, headers=self.headers).content</span><br><span class="line">        <span class="keyword">with</span> <span class="built_in">open</span>(path + <span class="string">&#x27;/&#123;&#125;.mp4&#x27;</span>.<span class="built_in">format</span>(v_title), <span class="string">&#x27;wb&#x27;</span>) <span class="keyword">as</span> video:</span><br><span class="line">            video.write(data)</span><br><span class="line">            print(<span class="string">&quot;视频名:&#123;&#125;\n状态: 下载完成\n地址:&#123;&#125;&quot;</span>.<span class="built_in">format</span>(v_title, path))</span><br><span class="line">        open_status = <span class="built_in">input</span>(<span class="string">&quot;是否打开? y/n\n&quot;</span>)</span><br><span class="line">        <span class="keyword">if</span> open_status == <span class="string">&#x27;y&#x27;</span> <span class="keyword">or</span> <span class="string">&#x27;Y&#x27;</span>:</span><br><span class="line">            os.startfile(path)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">run</span>(<span class="params">self</span>):</span></span><br><span class="line">        share_url = <span class="built_in">input</span>(<span class="string">&quot;请输入抖音分享链接:&quot;</span>)</span><br><span class="line">        share_url = re.findall(<span class="string">r&#x27;https://v.douyin.com/.*?/&#x27;</span>, share_url)[<span class="number">0</span>]</span><br><span class="line">        location = self.check_url(share_url)</span><br><span class="line">        v_id = re.findall(<span class="string">&#x27;/share/video/(\d*)&#x27;</span>, location)[<span class="number">0</span>]</span><br><span class="line">        download_url = <span class="string">&#x27;https://www.iesdouyin.com/web/api/v2/aweme/iteminfo/?item_ids=&#123;&#125;&#x27;</span>.<span class="built_in">format</span>(v_id)</span><br><span class="line">        self.download(download_url)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    dy = DouyinDownload()</span><br><span class="line">    dy.run()</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h1 id="运行截图"><a href="#运行截图" class="headerlink" title="运行截图"></a>运行截图</h1><p><img src="https://pic.rmb.bdstatic.com/bjh/3353e3f73d55e89186bf6729b7a22fb1.png"></p>
+<p><img src="https://pic.rmb.bdstatic.com/bjh/58304b8d5ec0ab43a9623b1de78658f1.png"></p>
 
     </div>
 
@@ -309,12 +302,12 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/posts/e6c4ccf7/" rel="prev" title="常大教务成绩爬取">
-      <i class="fa fa-chevron-left"></i> 常大教务成绩爬取
+    <a href="/posts/9590b4fb/" rel="prev" title="前后端分离CRUD基于vue+springboot">
+      <i class="fa fa-chevron-left"></i> 前后端分离CRUD基于vue+springboot
     </a></div>
       <div class="post-nav-item">
-    <a href="/posts/9590b4fb/" rel="next" title="前后端分离CRUD基于vue+springboot">
-      前后端分离CRUD基于vue+springboot <i class="fa fa-chevron-right"></i>
+    <a href="/posts/8ecfb50e/" rel="next" title="python实现小米运动多方刷步数">
+      python实现小米运动多方刷步数 <i class="fa fa-chevron-right"></i>
     </a></div>
     </div>
       </footer>
@@ -375,7 +368,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-text">前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E9%A1%B5%E9%9D%A2%E5%88%86%E6%9E%90"><span class="nav-text">一、页面分析</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E4%BB%A3%E7%A0%81%E7%BC%96%E5%86%99"><span class="nav-text">二、代码编写</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BB%93%E6%9E%9C"><span class="nav-text">结果</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-text">前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81"><span class="nav-text">代码</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%BF%90%E8%A1%8C%E6%88%AA%E5%9B%BE"><span class="nav-text">运行截图</span></a></li></ol></div>
 		
       </div>
       <!--/noindex-->

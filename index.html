@@ -192,6 +192,110 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/posts/b27af333/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/1624.jpg">
+      <meta itemprop="name" content="fanchen">
+      <meta itemprop="description" content="学习分享博客">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="故人的博客">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/posts/b27af333/" class="post-title-link" itemprop="url">爬取教务成绩的另一种姿势</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2021-02-05 18:11:36 / 修改时间：18:23:07" itemprop="dateCreated datePublished" datetime="2021-02-05T18:11:36+08:00">2021-02-05</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%88%AC%E8%99%AB%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">爬虫学习</span></a>
+                </span>
+            </span>
+
+          
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/posts/b27af333/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/posts/b27af333/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>3.9k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>4 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>之前已经有过一篇爬取成绩的实现blog，是基于学校官网的入口，再进入到教务系统进行查询，中途需要保持session。</p>
+<p>现在发现了一个新的入口：</p>
+<p><img src="https://pic.rmb.bdstatic.com/bjh/f8036105c9a22d9d1dbc3ceb2c97ba79.png">于是乎准备从这里进行成绩的爬取，经过一番分析后，发现爬取的姿势中需要包含一些参数，这些参数在网页的源代码中可以找到，即隐含域的值，input标签的hidden属性。如下图：</p>
+<p><img src="https://pic.rmb.bdstatic.com/bjh/77b2c8168b8a1bd981cace72ae77b5aa.png"></p>
+<p><img src="https://pic.rmb.bdstatic.com/bjh/3ca8b0366ec1acbc996d19fba8d6211c.png"></p>
+<p>这样就需要先使用xpath分析网页源代码，取到想要的值，再作post提交的参数。</p>
+<p>基本实现逻辑就是这样，下面进行代码的编写。</p>
+<h1 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">import</span> random</span><br><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line"><span class="keyword">from</span> lxml <span class="keyword">import</span> etree</span><br><span class="line"></span><br><span class="line"><span class="comment"># 使用到的url</span></span><br><span class="line">base_url = <span class="string">&#x27;http://202.195.102.33/&#x27;</span></span><br><span class="line">login_url = <span class="string">&#x27;http://202.195.102.33/login_gh.aspx&#x27;</span></span><br><span class="line">home_url = <span class="string">&#x27;http://202.195.102.33/web_xsxk/web_xs_xk_cjcx_fzjh.aspx&#x27;</span></span><br><span class="line">query_url = <span class="string">&#x27;http://202.195.102.33/web_cjgl/web_cj_xscj_cx_jy.aspx&#x27;</span></span><br><span class="line"><span class="comment"># ip代理池</span></span><br><span class="line">proxy_pool = [&#123;<span class="string">&#x27;HTTP&#x27;</span>: <span class="string">&#x27;123.169.124.51:9999&#x27;</span>&#125;, &#123;<span class="string">&#x27;HTTP&#x27;</span>: <span class="string">&#x27;175.43.56.26:9999&#x27;</span>&#125;, &#123;<span class="string">&#x27;HTTP&#x27;</span>: <span class="string">&#x27;113.194.142.137:9999&#x27;</span>&#125;, &#123;<span class="string">&#x27;HTTP&#x27;</span>: <span class="string">&#x27;175.42.68.43:9999&#x27;</span>&#125;, &#123;<span class="string">&#x27;HTTP&#x27;</span>: <span class="string">&#x27;171.35.175.173:9999&#x27;</span>&#125;, &#123;<span class="string">&#x27;HTTP&#x27;</span>: <span class="string">&#x27;113.195.18.159:9999&#x27;</span>&#125;, &#123;<span class="string">&#x27;HTTP&#x27;</span>: <span class="string">&#x27;125.108.112.49:9000&#x27;</span>&#125;, &#123;<span class="string">&#x27;HTTP&#x27;</span>: <span class="string">&#x27;113.195.23.235:9999&#x27;</span>&#125;, &#123;<span class="string">&#x27;HTTP&#x27;</span>: <span class="string">&#x27;121.232.199.237:9000&#x27;</span>&#125;, &#123;<span class="string">&#x27;HTTP&#x27;</span>: <span class="string">&#x27;123.101.231.234:9999&#x27;</span>&#125;]</span><br><span class="line"><span class="comment"># 请求头伪装</span></span><br><span class="line">headers = &#123;</span><br><span class="line">    <span class="string">&#x27;User-Agent&#x27;</span>: <span class="string">&#x27;Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) &#x27;</span></span><br><span class="line">                  <span class="string">&#x27;Chrome/87.0.4280.88 Safari/537.36 Edg/87.0.664.66 &#x27;</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="comment"># 学号 密码 的数据源</span></span><br><span class="line">data = pd.read_excel(io=<span class="string">&#x27;./软件186.xlsx&#x27;</span>, nrows=<span class="number">37</span>)</span><br><span class="line">person = []</span><br><span class="line">grade = []</span><br><span class="line"><span class="comment"># 处理账号数据</span></span><br><span class="line"><span class="keyword">for</span> d <span class="keyword">in</span> data.values:</span><br><span class="line">    person.append(</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="string">&#x27;学号&#x27;</span>: d[<span class="number">1</span>],</span><br><span class="line">            <span class="string">&#x27;身份证号&#x27;</span>: d[<span class="number">4</span>]</span><br><span class="line">        &#125;</span><br><span class="line">    )</span><br><span class="line"><span class="comment"># 循环请求</span></span><br><span class="line"><span class="keyword">for</span> p <span class="keyword">in</span> person:</span><br><span class="line">    proxies = random.choice(proxy_pool)</span><br><span class="line">    session = requests.session()</span><br><span class="line">    base_data = etree.HTML(session.get(url=base_url, headers=headers, proxies=proxies).content.decode())</span><br><span class="line">    __VIEWSTATE = base_data.xpath(<span class="string">&#x27;//input[@id=&quot;__VIEWSTATE&quot;]/@value&#x27;</span>)[<span class="number">0</span>]</span><br><span class="line">    data = &#123;</span><br><span class="line">        <span class="string">&#x27;__VIEWSTATE&#x27;</span>: __VIEWSTATE,</span><br><span class="line">        <span class="string">&#x27;UserName&#x27;</span>: p[<span class="string">&#x27;学号&#x27;</span>],</span><br><span class="line">        <span class="string">&#x27;Password&#x27;</span>: p[<span class="string">&#x27;身份证号&#x27;</span>][-<span class="number">6</span>:],</span><br><span class="line">        <span class="string">&#x27;getpassword&#x27;</span>: <span class="string">&#x27;&#x27;</span></span><br><span class="line">    &#125;</span><br><span class="line">    session.post(url=login_url, data=data, headers=headers, proxies=proxies)</span><br><span class="line">    __VIEWSTATE = etree.HTML(session.get(url=home_url, headers=headers, proxies=proxies).content.decode()).xpath(</span><br><span class="line">        <span class="string">&#x27;//input[@id=&quot;__VIEWSTATE&#x27;</span></span><br><span class="line">        <span class="string">&#x27;&quot;]/@value&#x27;</span>)[<span class="number">0</span>]</span><br><span class="line">    data = &#123;</span><br><span class="line">        <span class="string">&#x27;__VIEWSTATE&#x27;</span>: __VIEWSTATE,</span><br><span class="line">        <span class="string">&#x27;ImageButton2.x&#x27;</span>: <span class="string">&#x27;47&#x27;</span>,</span><br><span class="line">        <span class="string">&#x27;ImageButton2.y&#x27;</span>: <span class="string">&#x27;55&#x27;</span></span><br><span class="line">    &#125;</span><br><span class="line">    session.post(url=home_url, headers=headers, data=data, proxies=proxies)</span><br><span class="line">    session.get(url=query_url, headers=headers, proxies=proxies).content.decode()</span><br><span class="line">    __VIEWSTATE = etree.HTML(session.get(url=query_url, headers=headers, proxies=proxies).content.decode()).xpath(</span><br><span class="line">        <span class="string">&#x27;//input[@id=&quot;__VIEWSTATE&quot;]/@value&#x27;</span>)[<span class="number">0</span>]</span><br><span class="line">    data = &#123;</span><br><span class="line">        <span class="string">&#x27;ScriptManager1&#x27;</span>: <span class="string">&#x27;UpdatePanel1|Btcx&#x27;</span>,</span><br><span class="line">        <span class="string">&#x27;__EVENTTARGET&#x27;</span>: <span class="string">&#x27;&#x27;</span>,</span><br><span class="line">        <span class="string">&#x27;__EVENTARGUMENT&#x27;</span>: <span class="string">&#x27;&#x27;</span>,</span><br><span class="line">        <span class="string">&#x27;__VIEWSTATE&#x27;</span>: __VIEWSTATE,</span><br><span class="line">        <span class="string">&#x27;Btcx&#x27;</span>: <span class="string">&#x27;查询成绩&#x27;</span></span><br><span class="line">    &#125;</span><br><span class="line">    headers = &#123;</span><br><span class="line">        <span class="string">&#x27;User-Agent&#x27;</span>: <span class="string">&#x27;Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) &#x27;</span></span><br><span class="line">                      <span class="string">&#x27;Chrome/87.0.4280.88 Safari/537.36 Edg/87.0.664.66 &#x27;</span>,</span><br><span class="line">        <span class="string">&#x27;X-MicrosoftAjax&#x27;</span>: <span class="string">&#x27;Delta=true&#x27;</span></span><br><span class="line">    &#125;</span><br><span class="line">    query_page = session.post(url=query_url, headers=headers, data=data, proxies=proxies).content.decode()</span><br><span class="line">    table = etree.HTML(query_page)</span><br><span class="line">    trs = table.xpath(<span class="string">&#x27;//table[@id=&quot;gvcj1&quot;]/tr[@class=&quot;dg1-item&quot;]&#x27;</span>)</span><br><span class="line">    count = <span class="number">1</span></span><br><span class="line">    td_date = &#123;&#125;</span><br><span class="line">    <span class="keyword">for</span> td <span class="keyword">in</span> trs:</span><br><span class="line">        name = td.xpath(<span class="string">&#x27;./td[2]/text()&#x27;</span>)[<span class="number">0</span>]</span><br><span class="line">        subject = td.xpath(<span class="string">&#x27;./td[4]/text()&#x27;</span>)[<span class="number">0</span>]</span><br><span class="line">        score = td.xpath(<span class="string">&#x27;./td[7]/text()&#x27;</span>)[<span class="number">0</span>]</span><br><span class="line">        <span class="keyword">if</span> count == <span class="number">1</span>:</span><br><span class="line">            print(<span class="string">&#x27;正在爬取&#123;&#125;的成绩...&#x27;</span>.<span class="built_in">format</span>(name))</span><br><span class="line">            td_date[<span class="string">&#x27;姓名&#x27;</span>] = name</span><br><span class="line">        td_date[subject] = score</span><br><span class="line">        count += <span class="number">1</span></span><br><span class="line">    grade.append(td_date)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 持久化存储</span></span><br><span class="line">save = pd.DataFrame(grade)</span><br><span class="line">save.to_csv(<span class="string">&#x27;软件186班级成绩.csv&#x27;</span>, index=<span class="literal">False</span>, encoding=<span class="string">&#x27;utf-8-sig&#x27;</span>)</span><br></pre></td></tr></table></figure>
+<h1 id="结果截图"><a href="#结果截图" class="headerlink" title="结果截图"></a>结果截图</h1><p><img src="https://pic.rmb.bdstatic.com/bjh/46610b138dc5600651538ba44fc9834b.png"></p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://example.com/posts/8ecfb50e/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1212,122 +1316,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/posts/f027b801/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/1624.jpg">
-      <meta itemprop="name" content="fanchen">
-      <meta itemprop="description" content="学习分享博客">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="故人的博客">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/posts/f027b801/" class="post-title-link" itemprop="url">selenium自动化操作问卷星</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2021-01-16 16:42:19" itemprop="dateCreated datePublished" datetime="2021-01-16T16:42:19+08:00">2021-01-16</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-02-05 17:55:54" itemprop="dateModified" datetime="2021-02-05T17:55:54+08:00">2021-02-05</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E7%88%AC%E8%99%AB%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">爬虫学习</span></a>
-                </span>
-            </span>
-
-          
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/posts/f027b801/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/posts/f027b801/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>4.7k</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>4 分钟</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <font color=#999AAA >
-问卷星的自动化操作
-</font>
-
-
-<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p><font color=#999AAA >身边的很多同学需要填写问卷星，有很多需要刷任务的操作，等等类似场景，可以使用selenium实现</font></p>
-<p><font color=#999AAA >以下是本篇文章正文内容，下面案例可供参考</p>
-<h1 id="一、selenium是什么？"><a href="#一、selenium是什么？" class="headerlink" title="一、selenium是什么？"></a>一、selenium是什么？</h1><p><em>Selenium 是一个用于Web应用程序测试的工具。Selenium测试直接运行在浏览器中，就像真正的用户在操作一样。支持的浏览器包括IE（7, 8, 9, 10, 11），Mozilla Firefox，Safari，Google Chrome，Opera等。这个工具的主要功能包括：测试与浏览器的兼容性——测试你的应用程序看是否能够很好得工作在不同浏览器和操作系统之上。测试系统功能——创建回归测试检验软件功能和用户需求。支持自动录制动作和自动生成 .Net、Java、Perl等不同语言的测试脚本。</em></p>
-          <!--noindex-->
-            <div class="post-button">
-               <a class="btn" href="/posts/f027b801/" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1400,7 +1388,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">16</span>
+          <span class="site-state-item-count">17</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -1473,12 +1461,12 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-area"></i>
     </span>
-    <span title="站点总字数">83k</span>
+    <span title="站点总字数">87k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">1:15</span>
+    <span title="站点阅读时长">1:19</span>
 </div>
 <!--
 -->

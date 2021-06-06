@@ -217,7 +217,7 @@
               <span class="post-meta-item-text">发表于</span>
               
 
-              <time title="创建时间：2021-06-06 18:07:08 / 修改时间：19:12:02" itemprop="dateCreated datePublished" datetime="2021-06-06T18:07:08+08:00">2021-06-06</time>
+              <time title="创建时间：2021-06-06 18:07:08 / 修改时间：19:14:06" itemprop="dateCreated datePublished" datetime="2021-06-06T18:07:08+08:00">2021-06-06</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -265,7 +265,6 @@
                 <span class="post-meta-item-text">阅读时长 &asymp;</span>
               <span>1 分钟</span>
             </span>
-            <div class="post-description">这里是文章的描述。</div>
 
         </div>
       </header>
@@ -278,10 +277,14 @@
       
           <h1 id="图的存储"><a href="#图的存储" class="headerlink" title="图的存储"></a>图的存储</h1><h3 id="邻接矩阵法"><a href="#邻接矩阵法" class="headerlink" title="邻接矩阵法"></a>邻接矩阵法</h3><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> MaxVertexNum 100<span class="comment">//顶点数目的最大值</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> &#123;</span></span><br><span class="line">	<span class="keyword">char</span> Vex[MaxVertexNum];<span class="comment">//顶点表</span></span><br><span class="line">	<span class="keyword">int</span> Edge[MaxVertexNum][MaxVertexNum];<span class="comment">//邻接矩阵，边表</span></span><br><span class="line">	<span class="keyword">int</span> vexnum, arcnum;<span class="comment">//图的当前定点数和边数/弧数</span></span><br><span class="line">&#125;MGraph;</span><br></pre></td></tr></table></figure>
 <p><img src="https://pic.rmb.bdstatic.com/bjh/1e0c0cea9ebdf6b806585ccfe75ce9fa.png"></p>
-<h3 id="邻接矩阵存储带权图（网）"><a href="#邻接矩阵存储带权图（网）" class="headerlink" title="邻接矩阵存储带权图（网）"></a>邻接矩阵存储带权图（网）</h3><p><img src="https://pic.rmb.bdstatic.com/bjh/0dcbc1bfc1806e85a5756393db9ad861.png"></p>
-<h3 id="邻接表法（顺序-链式存储）"><a href="#邻接表法（顺序-链式存储）" class="headerlink" title="邻接表法（顺序+链式存储）"></a>邻接表法（顺序+链式存储）</h3><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> MaxVertexNum 100<span class="comment">//顶点数目的最大值</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">//边/弧</span></span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">ArcNode</span> &#123;</span></span><br><span class="line">	<span class="keyword">int</span> adjvex;<span class="comment">//边/弧指向哪个结点</span></span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">ArcNode</span>* <span class="title">next</span>;</span><span class="comment">//指向下一条狐的指针</span></span><br><span class="line">&#125;ArcNode;</span><br><span class="line"></span><br><span class="line"><span class="comment">//顶点</span></span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">VNode</span> &#123;</span></span><br><span class="line">	<span class="keyword">char</span> data;<span class="comment">//顶点信息</span></span><br><span class="line">	ArcNode* first;<span class="comment">//第一条边/弧</span></span><br><span class="line">&#125;VNode, AdjList[MaxVertexNum];</span><br><span class="line"></span><br><span class="line"><span class="comment">//用邻接表存储的图</span></span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> &#123;</span></span><br><span class="line">	AdjList vertices;</span><br><span class="line">	<span class="keyword">int</span> vexnum, arcnum;<span class="comment">//图的当前定点数和边数/弧数</span></span><br><span class="line">&#125;ALGraph;</span><br></pre></td></tr></table></figure>
-<p><img src="https://pic.rmb.bdstatic.com/bjh/9b3d65576c98baa185b52da2f2e3ba3a.png"></p>
-
+          <!--noindex-->
+            <div class="post-button">
+               <a class="btn" href="/posts/5b7c4e95/" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 

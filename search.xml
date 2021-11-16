@@ -1,6 +1,101 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>Git简单上手</title>
+    <url>/posts/b041f741/</url>
+    <content><![CDATA[<h1 id="Git的使用学习"><a href="#Git的使用学习" class="headerlink" title="Git的使用学习"></a>Git的使用学习</h1><h2 id="什么是版本控制"><a href="#什么是版本控制" class="headerlink" title="什么是版本控制"></a>什么是版本控制</h2><p>版本控制（Revision control）是一种在开发的过程中用于管理我们对文件、目录或工程等内容的修改历史，方便查看更改历史记录，备份以便恢复以前的版本的软件工程技术。</p>
+<ul>
+<li>实现跨区域多人协同开发</li>
+<li>追踪和记载一个或者多个文件的历史记录</li>
+<li>组织和保护你的源代码和文档</li>
+<li>统计工作量</li>
+<li>并行开发、提高开发效率</li>
+<li>跟踪记录整个软件的开发过程</li>
+<li>减轻开发人员的负担，节省时间，同时降低人为错误</li>
+</ul>
+<p>简单说就是用于管理多人协同开发项目的技术。</p>
+<p>没有进行版本控制或者版本控制本身缺乏正确的流程管理，在软件开发过程中将会引入很多问题，如软件代码的一致性、软件内容的冗余、软件过程的事物性、软件开发过程中的并发性、软件源代码的安全性，以及软件的整合等问题。</p>
+<a id="more"></a>
+
+<h2 id="Git配置"><a href="#Git配置" class="headerlink" title="Git配置"></a>Git配置</h2><p>所有的配置文件，其实都保存在本地！</p>
+<p>查看配置 git config -l</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> git config -l</span></span><br><span class="line">diff.astextplain.textconv=astextplain</span><br><span class="line">filter.lfs.clean=git-lfs clean -- %f</span><br><span class="line">filter.lfs.smudge=git-lfs smudge -- %f</span><br><span class="line">filter.lfs.process=git-lfs filter-process</span><br><span class="line">filter.lfs.required=true</span><br><span class="line">http.sslbackend=openssl</span><br><span class="line">http.sslcainfo=d:/Git/mingw64/ssl/certs/ca-bundle.crt</span><br><span class="line">core.autocrlf=true</span><br><span class="line">core.fscache=true</span><br><span class="line">core.symlinks=false</span><br><span class="line">pull.rebase=false</span><br><span class="line">credential.helper=manager-core</span><br><span class="line">credential.https://dev.azure.com.usehttppath=true</span><br><span class="line">init.defaultbranch=master</span><br><span class="line">user.email=1571025887@qq.com</span><br><span class="line">user.name=88Fanchen</span><br><span class="line">http.sslverify=true</span><br><span class="line">core.repositoryformatversion=0</span><br><span class="line">core.filemode=false</span><br><span class="line">core.bare=false</span><br><span class="line">core.logallrefupdates=true</span><br><span class="line">core.symlinks=false</span><br><span class="line">core.ignorecase=true</span><br></pre></td></tr></table></figure>
+
+
+<p>查看不同级别的配置文件：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">查看系统config</span></span><br><span class="line">git config --system --list</span><br><span class="line">　　</span><br><span class="line"><span class="meta">#</span><span class="bash">查看当前用户（global）配置</span></span><br><span class="line">git config --global  --list</span><br></pre></td></tr></table></figure>
+<p><strong>Git相关的配置文件：</strong></p>
+<p>1）、Git\etc\gitconfig  ：Git 安装目录下的 gitconfig   –system 系统级</p>
+<p>2）、C:\Users\Administrator\ .gitconfig   只适用于当前登录用户的配置  –global 全局</p>
+<h2 id="设置用户名与邮箱（用户标识，必要）"><a href="#设置用户名与邮箱（用户标识，必要）" class="headerlink" title="设置用户名与邮箱（用户标识，必要）"></a>设置用户名与邮箱（用户标识，必要）</h2><p>当你安装Git后首先要做的事情是设置你的用户名称和e-mail地址。这是非常重要的，因为每次Git提交都会使用该信息。它被永远的嵌入到了你的提交中：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> git config --global --list</span></span><br><span class="line">user.email=1571025887@qq.com</span><br><span class="line">user.name=88Fanchen</span><br><span class="line">http.sslverify=true</span><br></pre></td></tr></table></figure>
+<p>只需要做一次这个设置，如果你传递了–global 选项，因为Git将总是会使用该信息来处理你在系统中所做的一切操作。如果你希望在一个特定的项目中使用不同的名称或e-mail地址，你可以在该项目中运行该命令而不要–global选项。总之–global为全局配置，不加为某个项目的特定配置。</p>
+<h2 id="三个区域"><a href="#三个区域" class="headerlink" title="三个区域"></a>三个区域</h2><p>Git本地有三个工作区域：工作目录（Working Directory）、暂存区(Stage/Index)、资源库(Repository或Git Directory)。如果在加上远程的git仓库(Remote Directory)就可以分为四个工作区域。文件在这四个区域之间的转换关系如下：</p>
+<p><img src="https://pic.rmb.bdstatic.com/bjh/5de702014658006f8f6f35a9de86e876.png"></p>
+<ul>
+<li>Workspace：工作区，就是你平时存放项目代码的地方</li>
+<li>Index / Stage：暂存区，用于临时存放你的改动，事实上它只是一个文件，保存即将提交到文件列表信息</li>
+<li>Repository：仓库区（或本地仓库），就是安全存放数据的位置，这里面有你提交到所有版本的数据。其中HEAD指向最新放入仓库的版本</li>
+<li>Remote：远程仓库，托管代码的服务器，可以简单的认为是你项目组中的一台电脑用于远程数据交换</li>
+</ul>
+<p>本地的三个区域确切的说应该是git仓库中HEAD指向的版本：</p>
+<p><img src="https://pic.rmb.bdstatic.com/bjh/f65a1e0ee3feeee6c459bb2dea0dff90.png"></p>
+<ul>
+<li>Directory：使用Git管理的一个目录，也就是一个仓库，包含我们的工作空间和Git的管理空间。</li>
+<li>WorkSpace：需要通过Git进行版本控制的目录和文件，这些目录和文件组成了工作空间。</li>
+<li>.git：存放Git管理信息的目录，初始化仓库的时候自动创建。</li>
+<li>Index/Stage：暂存区，或者叫待提交更新区，在提交进入repo之前，我们可以把所有的更新放在暂存区。</li>
+<li>Local Repo：本地仓库，一个存放在本地的版本库；HEAD会只是当前的开发分支（branch）。</li>
+<li>Stash：隐藏，是一个工作状态保存栈，用于保存/恢复WorkSpace中的临时状态。</li>
+</ul>
+<h2 id="工作流程"><a href="#工作流程" class="headerlink" title="工作流程"></a>工作流程</h2><p>git的工作流程一般是这样的：</p>
+<p>１、在工作目录中添加、修改文件；</p>
+<p>２、将需要进行版本管理的文件放入暂存区域；</p>
+<p>３、将暂存区域的文件提交到git仓库。</p>
+<p>因此，git管理的文件有三种状态：已修改（modified）,已暂存（staged）,已提交(committed)</p>
+<p><img src="https://pic.rmb.bdstatic.com/bjh/d630b5bf29823b64080eac35312684c2.png"></p>
+<h2 id="创建工作目录与常用指令"><a href="#创建工作目录与常用指令" class="headerlink" title="创建工作目录与常用指令"></a>创建工作目录与常用指令</h2><p>工作目录（WorkSpace)一般就是你希望Git帮助你管理的文件夹，可以是你项目的目录，也可以是一个空目录，建议不要有中文。</p>
+<p>日常使用只要记住下图6个命令：</p>
+<p><img src="https://pic.rmb.bdstatic.com/bjh/4a7dd26e69562bad80efc33fe5947146.png"></p>
+<h2 id="本地仓库搭建"><a href="#本地仓库搭建" class="headerlink" title="本地仓库搭建"></a>本地仓库搭建</h2><p>创建本地仓库的方法有两种：一种是创建全新的仓库，另一种是克隆远程仓库。</p>
+<p>1、创建全新的仓库，需要用GIT管理的项目的根目录执行：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 在当前目录新建一个Git代码库</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git init</span></span><br></pre></td></tr></table></figure>
+<p>2、执行后可以看到，仅仅在项目目录多出了一个.git目录，关于版本等的所有信息都在这个目录里面。</p>
+<h2 id="克隆远程仓库"><a href="#克隆远程仓库" class="headerlink" title="克隆远程仓库"></a>克隆远程仓库</h2><p>1、另一种方式是克隆远程目录，由于是将远程服务器上的仓库完全镜像一份至本地！</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 克隆一个项目和它的整个代码历史(版本信息)</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git <span class="built_in">clone</span> [url]  <span class="comment"># https://gitee.com/kuangstudy/openclass.git</span></span></span><br></pre></td></tr></table></figure>
+<h2 id="文件的四种状态"><a href="#文件的四种状态" class="headerlink" title="文件的四种状态"></a>文件的四种状态</h2><p>版本控制就是对文件的版本控制，要对文件进行修改、提交等操作，首先要知道文件当前在什么状态，不然可能会提交了现在还不想提交的文件，或者要提交的文件没提交上。</p>
+<ul>
+<li>Untracked: 未跟踪, 此文件在文件夹中, 但并没有加入到git库, 不参与版本控制. 通过git add 状态变为Staged.</li>
+<li>Unmodify: 文件已经入库, 未修改, 即版本库中的文件快照内容与文件夹中完全一致. 这种类型的文件有两种去处, 如果它被修改, 而变为Modified. 如果使用git rm移出版本库, 则成为Untracked文件</li>
+<li>Modified: 文件已修改, 仅仅是修改, 并没有进行其他的操作. 这个文件也有两个去处, 通过git add可进入暂存staged状态, 使用git checkout 则丢弃修改过, 返回到unmodify状态, 这个git checkout即从库中取出文件, 覆盖当前修改 !</li>
+<li>Staged: 暂存状态. 执行git commit则将修改同步到库中, 这时库中的文件和本地文件又变为一致, 文件为Unmodify状态. 执行git reset HEAD filename取消暂存, 文件状态为Modified</li>
+</ul>
+<h2 id="查看文件状态"><a href="#查看文件状态" class="headerlink" title="查看文件状态"></a>查看文件状态</h2><p>上面说文件有4种状态，通过如下命令可以查看到文件的状态：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">查看指定文件状态</span></span><br><span class="line">git status [filename]</span><br><span class="line"><span class="meta">#</span><span class="bash">查看所有文件状态</span></span><br><span class="line">git status</span><br><span class="line"><span class="meta">#</span><span class="bash"> git add .                  添加所有文件到暂存区</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> git commit -m <span class="string">&quot;消息内容&quot;</span>    提交暂存区中的内容到本地仓库 -m 提交信息</span></span><br></pre></td></tr></table></figure>
+<h2 id="忽略文件"><a href="#忽略文件" class="headerlink" title="忽略文件"></a>忽略文件</h2><p>有些时候我们不想把某些文件纳入版本控制中，比如数据库文件，临时文件，设计文件等</p>
+<p>在主目录下建立”.gitignore”文件，此文件有如下规则：</p>
+<ol>
+<li>忽略文件中的空行或以井号（#）开始的行将会被忽略。</li>
+<li>可以使用Linux通配符。例如：星号（*）代表任意多个字符，问号（？）代表一个字符，方括号（[abc]）代表可选字符范围，大括号（{string1,string2,…}）代表可选的字符串等。</li>
+<li>如果名称的最前面有一个感叹号（!），表示例外规则，将不被忽略。</li>
+<li>如果名称的最前面是一个路径分隔符（/），表示要忽略的文件在此目录下，而子目录中的文件不忽略。</li>
+<li>如果名称的最后面是一个路径分隔符（/），表示要忽略的是此目录下该名称的子目录，而非文件（默认文件或目录都忽略）。</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">为注释</span></span><br><span class="line">*.txt        #忽略所有 .txt结尾的文件,这样的话上传就不会被选中！</span><br><span class="line">!lib.txt     #但lib.txt除外</span><br><span class="line">/temp        #仅忽略项目根目录下的TODO文件,不包括其它目录</span><br><span class="line">tempbuild/       #忽略build/目录下的所有文件</span><br><span class="line">doc/*.txt    #会忽略 doc/notes.txt 但不包括 doc/server/arch.txt</span><br></pre></td></tr></table></figure>
+<h2 id="使用码云"><a href="#使用码云" class="headerlink" title="使用码云"></a>使用码云</h2><p>1.设置本机绑定SSH公钥，实现免密码登录！（免密码登录，这一步挺重要的，码云是远程仓库，我们是平时工作在本地仓库！)</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 进入 C:\Users\Administrator\.ssh 目录</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 生成公钥</span></span><br><span class="line">ssh-keygen</span><br></pre></td></tr></table></figure>
+<p>2.将公钥信息public key 添加到码云账户中即可！</p>
+<h2 id="分支"><a href="#分支" class="headerlink" title="分支"></a>分支</h2><p>git分支中常用指令：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 列出所有本地分支</span></span><br><span class="line">git branch</span><br><span class="line"><span class="meta">#</span><span class="bash"> 列出所有远程分支</span></span><br><span class="line">git branch -r</span><br><span class="line"><span class="meta">#</span><span class="bash"> 新建一个分支，但依然停留在当前分支</span></span><br><span class="line">git branch [branch-name]</span><br><span class="line"><span class="meta">#</span><span class="bash"> 新建一个分支，并切换到该分支</span></span><br><span class="line">git checkout -b [branch]</span><br><span class="line"><span class="meta">#</span><span class="bash"> 合并指定分支到当前分支</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git merge [branch]</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 删除分支</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git branch -d [branch-name]</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 删除远程分支</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git push origin --delete [branch-name]$ git branch -dr [remote/branch]</span></span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>学习</category>
+      </categories>
+      <tags>
+        <tag>Git</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>python实现抖音无水印下载</title>
     <url>/posts/106c0da3/</url>
     <content><![CDATA[<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>使用抖音的分享链接对其进行无水印的下载</p>
@@ -47,34 +142,6 @@
       <tags>
         <tag>Python</tag>
         <tag>问卷星</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>分析模板资源网站并使用python进行下载</title>
-    <url>/posts/378704c3/</url>
-    <content><![CDATA[<font color=#999AAA >
-侵权删除。
-</font>
-
-
-<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p><strong>今天准备在网上找一个web模板，用来做Echarts的数据可视化。寻找模板的过程中像往常一样，遇到了很多的收费网站，一般都是月费年费类型的。然后我就遇到了下面这个网站：</strong><br><img src="https://img-blog.csdnimg.cn/20210104223121512.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0hhbmRzb21lRmlzaG1hbg==,size_16,color_FFFFFF,t_70"></p>
-<a id="more"></a>
-
-<p>在我下载的过程中简单分析了一下，是否可以抓包的方式，获取对应的下载链接，下面<strong>进入我们的正文分析环节。</strong></p>
-<p><font color=#999AAA >以下是本篇文章正文内容</p>
-<h1 id="一、页面分析"><a href="#一、页面分析" class="headerlink" title="一、页面分析"></a>一、页面分析</h1><p><img src="https://img-blog.csdnimg.cn/20210104223458871.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0hhbmRzb21lRmlzaG1hbg==,size_16,color_FFFFFF,t_70"><br>发现下载模板的a标签中没有存在相应的href属性，一般下载链接都不会放在这，应该是通过js进行的控制。于是我看了一下下载好模板对应的url链接，对其进行分析后发现，<strong>几个url大致相同，只有两个参数发生了变化，就是对应的压缩文件名，和对应的sid。</strong><br><img src="https://img-blog.csdnimg.cn/20210104223908796.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0hhbmRzb21lRmlzaG1hbg==,size_16,color_FFFFFF,t_70"><br><strong>我们可以发现 第一个压缩包名字就是在线预览url中，index.html之前的参数，所以我们直接取页面中href属性值就可以，sid页面上则贴心的给我们显示出来了，就是素材编号，猜测sid的s就是素材的缩写，hhh</strong><br>再看看我们点击下载按钮后的抓包工具里，出现了一个异步请求，又是cookie又是token的校验。<br><img src="https://img-blog.csdnimg.cn/20210104224225721.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0hhbmRzb21lRmlzaG1hbg==,size_16,color_FFFFFF,t_70"><br>最后返回了一个json数据，里面果然存放的就是下载链接等信息。<br><img src="https://img-blog.csdnimg.cn/20210104224438444.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0hhbmRzb21lRmlzaG1hbg==,size_16,color_FFFFFF,t_70"><br>到这里我们的分析基本已经结束了，拿到了下载链接后，打开浏览器的隐私窗口对其进行访问，果然不用登陆就直接下载了对应的模板压缩包，接下来进行我们的<strong>代码编写</strong>。</p>
-<h1 id="二、编写代码"><a href="#二、编写代码" class="headerlink" title="二、编写代码"></a>二、编写代码</h1><p>代码很简短，这次<strong>主要是锻炼我们的网页分析和抓包思路。</strong></p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">import</span> random</span><br><span class="line"><span class="keyword">from</span> fake_useragent <span class="keyword">import</span> UserAgent</span><br><span class="line"><span class="keyword">from</span> lxml <span class="keyword">import</span> etree</span><br><span class="line"></span><br><span class="line"><span class="comment"># ip代理池</span></span><br><span class="line">proxy_pool = [&#123;<span class="string">&#x27;http&#x27;</span>: <span class="string">&#x27;http://175.42.122.247:9999&#x27;</span>&#125;, &#123;<span class="string">&#x27;http&#x27;</span>: <span class="string">&#x27;http://115.53.37.35:9999&#x27;</span>&#125;,</span><br><span class="line">              &#123;<span class="string">&#x27;http&#x27;</span>: <span class="string">&#x27;http://115.221.242.62:9999&#x27;</span>&#125;, &#123;<span class="string">&#x27;http&#x27;</span>: <span class="string">&#x27;http://175.42.129.10:9999&#x27;</span>&#125;]</span><br><span class="line"><span class="comment"># 机型伪装头</span></span><br><span class="line">headers = &#123;</span><br><span class="line">    <span class="string">&#x27;user-agent&#x27;</span>: UserAgent().random</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment"># 下载地址的基础模板</span></span><br><span class="line">base_url = <span class="string">&#x27;http://down.kangjingept.com/cssthemes6/&#123;&#125;.zip?sid=&#123;&#125;&#x27;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 封装函数</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_zip</span>(<span class="params">url</span>):</span></span><br><span class="line">    <span class="comment"># 请求url中就包含了我们的sid 懒得去xpath解析了 直接分割字符串吧</span></span><br><span class="line">    sid = url.split(<span class="string">&#x27;/&#x27;</span>)[-<span class="number">1</span>].split(<span class="string">&#x27;.&#x27;</span>)[<span class="number">0</span>]</span><br><span class="line">    <span class="comment"># 请求网页地址 再用etree解析对象</span></span><br><span class="line">    response = requests.get(url=url, headers=headers, proxies=random.choice(proxy_pool)).text</span><br><span class="line">    data = etree.HTML(response)</span><br><span class="line">    <span class="comment"># 压缩包的名字 取a标签中的href属性值</span></span><br><span class="line">    zip_name = data.xpath(<span class="string">&#x27;//div[@class=&quot;btn_box&quot;]/a[1]/@href&#x27;</span>)[<span class="number">0</span>].split(<span class="string">&#x27;/&#x27;</span>)[-<span class="number">2</span>]</span><br><span class="line">    <span class="comment"># 又找了一个中文的文件名 方便浏览</span></span><br><span class="line">    file_name = data.xpath(<span class="string">&#x27;/html/body/div[8]/h1/text()&#x27;</span>)[<span class="number">0</span>]</span><br><span class="line">    <span class="comment"># 拼接url</span></span><br><span class="line">    zip_url = base_url.<span class="built_in">format</span>(zip_name, sid)</span><br><span class="line">    <span class="comment"># 获取压缩包的内容</span></span><br><span class="line">    zip_content = requests.get(url=zip_url, headers=headers).content</span><br><span class="line">    <span class="comment"># 二进制格式写入</span></span><br><span class="line">    <span class="keyword">with</span> <span class="built_in">open</span>(<span class="string">&#x27;./&#123;&#125;.zip&#x27;</span>.<span class="built_in">format</span>(file_name), <span class="string">&#x27;wb&#x27;</span>) <span class="keyword">as</span> z:</span><br><span class="line">        z.write(zip_content)</span><br><span class="line">        print(<span class="string">&#x27;文件&#123;&#125;.zip 下载完毕！！！&#x27;</span>.<span class="built_in">format</span>(file_name))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 键盘粘贴对应的链接</span></span><br><span class="line">input_url = <span class="built_in">input</span>(<span class="string">&#x27;请输入对应的链接：&#x27;</span>)</span><br><span class="line">get_zip(input_url)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h1 id="结果演示"><a href="#结果演示" class="headerlink" title="结果演示"></a>结果演示</h1><p><img src="https://img-blog.csdnimg.cn/20210104225555275.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0hhbmRzb21lRmlzaG1hbg==,size_16,color_FFFFFF,t_70"><br><img src="https://img-blog.csdnimg.cn/20210104225615458.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0hhbmRzb21lRmlzaG1hbg==,size_16,color_FFFFFF,t_70"></p>
-]]></content>
-      <categories>
-        <category>爬虫学习</category>
-      </categories>
-      <tags>
-        <tag>Python</tag>
-        <tag>破解分析</tag>
-        <tag>下载</tag>
       </tags>
   </entry>
   <entry>
@@ -217,25 +284,31 @@
       </tags>
   </entry>
   <entry>
-    <title>常大教务成绩爬取</title>
-    <url>/posts/e6c4ccf7/</url>
-    <content><![CDATA[<h1 id="常州大学官网-教务成绩信息爬取"><a href="#常州大学官网-教务成绩信息爬取" class="headerlink" title="常州大学官网-教务成绩信息爬取"></a>常州大学官网-教务成绩信息爬取</h1><h2 id="遇到的问题"><a href="#遇到的问题" class="headerlink" title="遇到的问题"></a>遇到的问题</h2><ul>
-<li>cookie问题 由requests下的session解决</li>
-<li>lxml下的etree负责解析网页数据</li>
-<li>封装账号信息post模拟登录</li>
-<li>在页面中的隐含域下获取请求的参数值，如lt，execution</li>
-</ul>
+    <title>分析模板资源网站并使用python进行下载</title>
+    <url>/posts/378704c3/</url>
+    <content><![CDATA[<font color=#999AAA >
+侵权删除。
+</font>
+
+
+<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p><strong>今天准备在网上找一个web模板，用来做Echarts的数据可视化。寻找模板的过程中像往常一样，遇到了很多的收费网站，一般都是月费年费类型的。然后我就遇到了下面这个网站：</strong><br><img src="https://img-blog.csdnimg.cn/20210104223121512.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0hhbmRzb21lRmlzaG1hbg==,size_16,color_FFFFFF,t_70"></p>
 <a id="more"></a>
 
-<h2 id="代码编写"><a href="#代码编写" class="headerlink" title="代码编写"></a>代码编写</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">from</span> lxml <span class="keyword">import</span> etree</span><br><span class="line"></span><br><span class="line">login_url = <span class="string">&#x27;http://sso.cczu.edu.cn/sso/login?service=http%3A%2F%2Fs.cczu.edu.cn%2F&#x27;</span></span><br><span class="line">home_url = <span class="string">&#x27;http://219.230.159.132/web_cas/web_cas_login_jwgl.aspx&#x27;</span></span><br><span class="line">grade_url = <span class="string">&#x27;http://219.230.159.132/web_cjgl/cx_cj_xh.aspx&#x27;</span></span><br><span class="line">headers = &#123;</span><br><span class="line">    <span class="string">&#x27;User-Agent&#x27;</span>: <span class="string">&#x27;Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) &#x27;</span></span><br><span class="line">                  <span class="string">&#x27;Chrome/87.0.4280.88 Safari/537.36 Edg/87.0.664.66 &#x27;</span></span><br><span class="line">&#125;</span><br><span class="line">session = requests.session()</span><br><span class="line">login_page_data = etree.HTML(session.get(url=login_url, headers=headers).content.decode())</span><br><span class="line">execution = login_page_data.xpath(<span class="string">&#x27;//input[@name=&quot;execution&quot;]/@value&#x27;</span>)[<span class="number">0</span>]</span><br><span class="line">lt = login_page_data.xpath(<span class="string">&#x27;//input[@name=&quot;lt&quot;]/@value&#x27;</span>)[<span class="number">0</span>]</span><br><span class="line">data = &#123;</span><br><span class="line">    <span class="string">&#x27;username&#x27;</span>: <span class="string">&#x27;学号&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;password&#x27;</span>: <span class="string">&#x27;密码&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;lt&#x27;</span>: lt,</span><br><span class="line">    <span class="string">&#x27;execution&#x27;</span>: execution,</span><br><span class="line">    <span class="string">&#x27;_eventId&#x27;</span>: <span class="string">&#x27;submit&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;useVCode&#x27;</span>: <span class="string">&#x27;false&#x27;</span></span><br><span class="line">&#125;</span><br><span class="line">session.post(url=login_url, data=data, headers=headers)</span><br><span class="line">session.get(url=home_url, headers=headers)</span><br><span class="line">grade_page = session.get(url=grade_url, headers=headers).content.decode()</span><br><span class="line">grade_data = etree.HTML(grade_page)</span><br><span class="line">trs = grade_data.xpath(<span class="string">&#x27;//table[@id=&quot;gvcj1&quot;]/tr[@class=&quot;dg1-item&quot;]&#x27;</span>)</span><br><span class="line"><span class="keyword">for</span> tr <span class="keyword">in</span> trs:</span><br><span class="line">    s_id = tr.xpath(<span class="string">&#x27;./td[1]/text()&#x27;</span>)[<span class="number">0</span>]</span><br><span class="line">    s_name = tr.xpath(<span class="string">&#x27;./td[2]/text()&#x27;</span>)[<span class="number">0</span>]</span><br><span class="line">    s_term = tr.xpath(<span class="string">&#x27;./td[3]/text()&#x27;</span>)[<span class="number">0</span>]</span><br><span class="line">    s_subject = tr.xpath(<span class="string">&#x27;./td[4]/text()&#x27;</span>)[<span class="number">0</span>]</span><br><span class="line">    s_type = tr.xpath(<span class="string">&#x27;./td[5]/text()&#x27;</span>)[<span class="number">0</span>]</span><br><span class="line">    s_grade = tr.xpath(<span class="string">&#x27;./td[6]/text()&#x27;</span>)[<span class="number">0</span>]</span><br><span class="line">    s_properties = tr.xpath(<span class="string">&#x27;./td[7]/text()&#x27;</span>)[<span class="number">0</span>]</span><br><span class="line">    s_point = tr.xpath(<span class="string">&#x27;./td[8]/text()&#x27;</span>)[<span class="number">0</span>]</span><br><span class="line">    s_time = tr.xpath(<span class="string">&#x27;./td[9]/text()&#x27;</span>)[<span class="number">0</span>]</span><br><span class="line">    s_code = tr.xpath(<span class="string">&#x27;./td[10]/text()&#x27;</span>)[<span class="number">0</span>]</span><br><span class="line">    s_hour = tr.xpath(<span class="string">&#x27;./td[11]/text()&#x27;</span>)[<span class="number">0</span>]</span><br><span class="line">    print(<span class="string">&#x27; 学号：&#x27;</span> + s_id + <span class="string">&#x27;\n&#x27;</span>, <span class="string">&#x27;姓名：&#x27;</span> + s_name + <span class="string">&#x27;\n&#x27;</span>, <span class="string">&#x27;学期：&#x27;</span> + s_term + <span class="string">&#x27;\n&#x27;</span>, <span class="string">&#x27;科目：&#x27;</span> + s_subject + <span class="string">&#x27;\n&#x27;</span>,</span><br><span class="line">          <span class="string">&#x27;类别：&#x27;</span> + s_type + <span class="string">&#x27;\n&#x27;</span>, <span class="string">&#x27;学分：&#x27;</span> + s_grade + <span class="string">&#x27;\n&#x27;</span>, <span class="string">&#x27;分数：&#x27;</span> + s_properties + <span class="string">&#x27;\n&#x27;</span>,</span><br><span class="line">          <span class="string">&#x27;性质：&#x27;</span> + s_point + <span class="string">&#x27;\n&#x27;</span>, <span class="string">&#x27;绩点：&#x27;</span> + s_time + <span class="string">&#x27;\n&#x27;</span>,</span><br><span class="line">          <span class="string">&#x27;课程代码：&#x27;</span> + s_code + <span class="string">&#x27;\n&#x27;</span>, <span class="string">&#x27;课时：&#x27;</span> + s_hour + <span class="string">&#x27;\n&#x27;</span>)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>在我下载的过程中简单分析了一下，是否可以抓包的方式，获取对应的下载链接，下面<strong>进入我们的正文分析环节。</strong></p>
+<p><font color=#999AAA >以下是本篇文章正文内容</p>
+<h1 id="一、页面分析"><a href="#一、页面分析" class="headerlink" title="一、页面分析"></a>一、页面分析</h1><p><img src="https://img-blog.csdnimg.cn/20210104223458871.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0hhbmRzb21lRmlzaG1hbg==,size_16,color_FFFFFF,t_70"><br>发现下载模板的a标签中没有存在相应的href属性，一般下载链接都不会放在这，应该是通过js进行的控制。于是我看了一下下载好模板对应的url链接，对其进行分析后发现，<strong>几个url大致相同，只有两个参数发生了变化，就是对应的压缩文件名，和对应的sid。</strong><br><img src="https://img-blog.csdnimg.cn/20210104223908796.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0hhbmRzb21lRmlzaG1hbg==,size_16,color_FFFFFF,t_70"><br><strong>我们可以发现 第一个压缩包名字就是在线预览url中，index.html之前的参数，所以我们直接取页面中href属性值就可以，sid页面上则贴心的给我们显示出来了，就是素材编号，猜测sid的s就是素材的缩写，hhh</strong><br>再看看我们点击下载按钮后的抓包工具里，出现了一个异步请求，又是cookie又是token的校验。<br><img src="https://img-blog.csdnimg.cn/20210104224225721.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0hhbmRzb21lRmlzaG1hbg==,size_16,color_FFFFFF,t_70"><br>最后返回了一个json数据，里面果然存放的就是下载链接等信息。<br><img src="https://img-blog.csdnimg.cn/20210104224438444.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0hhbmRzb21lRmlzaG1hbg==,size_16,color_FFFFFF,t_70"><br>到这里我们的分析基本已经结束了，拿到了下载链接后，打开浏览器的隐私窗口对其进行访问，果然不用登陆就直接下载了对应的模板压缩包，接下来进行我们的<strong>代码编写</strong>。</p>
+<h1 id="二、编写代码"><a href="#二、编写代码" class="headerlink" title="二、编写代码"></a>二、编写代码</h1><p>代码很简短，这次<strong>主要是锻炼我们的网页分析和抓包思路。</strong></p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">import</span> random</span><br><span class="line"><span class="keyword">from</span> fake_useragent <span class="keyword">import</span> UserAgent</span><br><span class="line"><span class="keyword">from</span> lxml <span class="keyword">import</span> etree</span><br><span class="line"></span><br><span class="line"><span class="comment"># ip代理池</span></span><br><span class="line">proxy_pool = [&#123;<span class="string">&#x27;http&#x27;</span>: <span class="string">&#x27;http://175.42.122.247:9999&#x27;</span>&#125;, &#123;<span class="string">&#x27;http&#x27;</span>: <span class="string">&#x27;http://115.53.37.35:9999&#x27;</span>&#125;,</span><br><span class="line">              &#123;<span class="string">&#x27;http&#x27;</span>: <span class="string">&#x27;http://115.221.242.62:9999&#x27;</span>&#125;, &#123;<span class="string">&#x27;http&#x27;</span>: <span class="string">&#x27;http://175.42.129.10:9999&#x27;</span>&#125;]</span><br><span class="line"><span class="comment"># 机型伪装头</span></span><br><span class="line">headers = &#123;</span><br><span class="line">    <span class="string">&#x27;user-agent&#x27;</span>: UserAgent().random</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment"># 下载地址的基础模板</span></span><br><span class="line">base_url = <span class="string">&#x27;http://down.kangjingept.com/cssthemes6/&#123;&#125;.zip?sid=&#123;&#125;&#x27;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 封装函数</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_zip</span>(<span class="params">url</span>):</span></span><br><span class="line">    <span class="comment"># 请求url中就包含了我们的sid 懒得去xpath解析了 直接分割字符串吧</span></span><br><span class="line">    sid = url.split(<span class="string">&#x27;/&#x27;</span>)[-<span class="number">1</span>].split(<span class="string">&#x27;.&#x27;</span>)[<span class="number">0</span>]</span><br><span class="line">    <span class="comment"># 请求网页地址 再用etree解析对象</span></span><br><span class="line">    response = requests.get(url=url, headers=headers, proxies=random.choice(proxy_pool)).text</span><br><span class="line">    data = etree.HTML(response)</span><br><span class="line">    <span class="comment"># 压缩包的名字 取a标签中的href属性值</span></span><br><span class="line">    zip_name = data.xpath(<span class="string">&#x27;//div[@class=&quot;btn_box&quot;]/a[1]/@href&#x27;</span>)[<span class="number">0</span>].split(<span class="string">&#x27;/&#x27;</span>)[-<span class="number">2</span>]</span><br><span class="line">    <span class="comment"># 又找了一个中文的文件名 方便浏览</span></span><br><span class="line">    file_name = data.xpath(<span class="string">&#x27;/html/body/div[8]/h1/text()&#x27;</span>)[<span class="number">0</span>]</span><br><span class="line">    <span class="comment"># 拼接url</span></span><br><span class="line">    zip_url = base_url.<span class="built_in">format</span>(zip_name, sid)</span><br><span class="line">    <span class="comment"># 获取压缩包的内容</span></span><br><span class="line">    zip_content = requests.get(url=zip_url, headers=headers).content</span><br><span class="line">    <span class="comment"># 二进制格式写入</span></span><br><span class="line">    <span class="keyword">with</span> <span class="built_in">open</span>(<span class="string">&#x27;./&#123;&#125;.zip&#x27;</span>.<span class="built_in">format</span>(file_name), <span class="string">&#x27;wb&#x27;</span>) <span class="keyword">as</span> z:</span><br><span class="line">        z.write(zip_content)</span><br><span class="line">        print(<span class="string">&#x27;文件&#123;&#125;.zip 下载完毕！！！&#x27;</span>.<span class="built_in">format</span>(file_name))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 键盘粘贴对应的链接</span></span><br><span class="line">input_url = <span class="built_in">input</span>(<span class="string">&#x27;请输入对应的链接：&#x27;</span>)</span><br><span class="line">get_zip(input_url)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h1 id="结果演示"><a href="#结果演示" class="headerlink" title="结果演示"></a>结果演示</h1><p><img src="https://img-blog.csdnimg.cn/20210104225555275.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0hhbmRzb21lRmlzaG1hbg==,size_16,color_FFFFFF,t_70"><br><img src="https://img-blog.csdnimg.cn/20210104225615458.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0hhbmRzb21lRmlzaG1hbg==,size_16,color_FFFFFF,t_70"></p>
 ]]></content>
       <categories>
         <category>爬虫学习</category>
       </categories>
       <tags>
         <tag>Python</tag>
-        <tag>教务系统</tag>
-        <tag>成绩查询</tag>
+        <tag>破解分析</tag>
+        <tag>下载</tag>
       </tags>
   </entry>
   <entry>
@@ -262,6 +335,80 @@
         <tag>Java</tag>
         <tag>Vue</tag>
         <tag>前后端分离</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>微信聊天记录数据库解密并导出</title>
+    <url>/posts/7de13740/</url>
+    <content><![CDATA[<h1 id="微信数据库解码"><a href="#微信数据库解码" class="headerlink" title="微信数据库解码"></a>微信数据库解码</h1><p><img src="https://pic.rmb.bdstatic.com/bjh/bfe8f02b3a0bcb12f69389140194efc5.png"></p>
+<a id="more"></a>
+
+<p>上图为导出后的聊天信息数据的表格文件，接下来请看我的操作步骤。</p>
+<h2 id="工具准备"><a href="#工具准备" class="headerlink" title="工具准备"></a>工具准备</h2><ol>
+<li>夜神模拟器 并安装微信</li>
+<li>PC版微信 以及 你正在使用的有聊天记录的手机（Android IOS都可以）</li>
+<li>SQLCipher 用来解密数据库</li>
+</ol>
+<h2 id="获取微信的数据库文件"><a href="#获取微信的数据库文件" class="headerlink" title="获取微信的数据库文件"></a>获取微信的数据库文件</h2><p>首先用正在使用的手机登陆微信，再登录PC版微信（两个设备需要在同一局域网下），然后使用备份与恢复。</p>
+<p><img src="https://pic.rmb.bdstatic.com/bjh/23bd5fb3ff994c45111a1a8fd425bb1d.png"></p>
+<p>然后选择备份连天记录到电脑。</p>
+<p><img src="https://pic.rmb.bdstatic.com/bjh/3c921bdb7183459aa5827f345f971317.png"></p>
+<p>在手机上确定，并可以指定聊天记录或者全部备份。</p>
+<p><img src="https://pic.rmb.bdstatic.com/bjh/244a76ece3d858e8fadf77ecf1e87355.png"></p>
+<p>这是保存在电脑上的备份数据文件，因为比较难于解密和分析，所以我们不做处理。接下来将聊天记录恢复到安卓模拟器中，再进行数据库的提取。</p>
+<p><img src="https://pic.rmb.bdstatic.com/bjh/19ca7fc5cf2ec8da7fd62b5fb3bce215.png"></p>
+<p>登录好模拟器上的微信后，选择恢复聊天记录到手机，并在模拟器上确认。恢复聊天记录完成后，打开文件管理器。</p>
+<p><img src="https://pic.rmb.bdstatic.com/bjh/ea86ff2d3983193994c061051c5bdac4.png"></p>
+<p>数据库文件在<strong>根目录/data/data/com.tencent.mm/MicroMsg</strong>中。加密的数据库文件在两个长名字文件夹之一中，优先选择<strong>修改日期最新</strong>的那个。</p>
+<p><img src="https://pic.rmb.bdstatic.com/bjh/1a01fce9f73c6400b00b85d18d05dd64.png"></p>
+<p><img src="https://pic.rmb.bdstatic.com/bjh/7cd632942a41f87df4b7391b61e71f93.png"></p>
+<h2 id="获取数据库密码"><a href="#获取数据库密码" class="headerlink" title="获取数据库密码"></a>获取数据库密码</h2><p>在下图的路径中找到对应的xml文件，其中有账号对应的UIN号。</p>
+<p><img src="https://pic.rmb.bdstatic.com/bjh/2dd5ad072b0d65deb748319fe9ad97e5.png"></p>
+<p><img src="https://pic.rmb.bdstatic.com/bjh/8ed9911140cdea860509418012ff37bd.png"></p>
+<p>在模拟器设置中查看自己的IMEI号。</p>
+<p><img src="https://pic.rmb.bdstatic.com/bjh/1762bcfa593d9675137686277f87f2bb.png"></p>
+<p>在加密网站中，将IMEI和UIN号进行拼接（<strong>保留负号</strong>），加密方式选择<strong>32位小</strong>。</p>
+<p><a href="https://link.zhihu.com/?target=https://tool.chinaz.com/tools/md5.aspx">MD5在线加密/解密/破解 - 站长工具</a></p>
+<p><img src="https://pic.rmb.bdstatic.com/bjh/c76dda4055f8b30e2001b55e0bcf8786.png"></p>
+<h2 id="数据库处理"><a href="#数据库处理" class="headerlink" title="数据库处理"></a>数据库处理</h2><p>根据拿到的密码查看数据库。</p>
+<p><img src="https://pic.rmb.bdstatic.com/bjh/79523907938a6f6318d818b9989bb4e5.png"></p>
+<p><img src="https://pic.rmb.bdstatic.com/bjh/f10b4d50439b4236899764df097623f6.png"></p>
+<p>导出为表格文件。</p>
+<p><img src="https://pic.rmb.bdstatic.com/bjh/cb7088579a9c22beb0e4e08b9a3510cd.png"></p>
+<h2 id="密码不对的情况"><a href="#密码不对的情况" class="headerlink" title="密码不对的情况"></a>密码不对的情况</h2><p>如果出现这样的情况说明你的密码不对。</p>
+<p><img src="https://pic.rmb.bdstatic.com/bjh/6a17ff1af5205835e77b51b31fac58ae.png"></p>
+<p>可以尝试使用MD5加密 1234567890ABCDEF + UIN生成的前七位字符试一下。</p>
+<p><img src="https://pic.rmb.bdstatic.com/bjh/80f2edfa24b314dc804ce9fe4574df0b.png"></p>
+<h2 id="聊天数据整理"><a href="#聊天数据整理" class="headerlink" title="聊天数据整理"></a>聊天数据整理</h2><p>使用python的jieba分词等，对csv文件进行数据清洗，因为太简单就不附上代码了，下面直接放上成品图。</p>
+<p><img src="https://pic.rmb.bdstatic.com/bjh/82b8d74eab4559b4a485b3a49291c3d3.png"></p>
+]]></content>
+      <categories>
+        <category>学习</category>
+      </categories>
+      <tags>
+        <tag>Python</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>常大教务成绩爬取</title>
+    <url>/posts/e6c4ccf7/</url>
+    <content><![CDATA[<h1 id="常州大学官网-教务成绩信息爬取"><a href="#常州大学官网-教务成绩信息爬取" class="headerlink" title="常州大学官网-教务成绩信息爬取"></a>常州大学官网-教务成绩信息爬取</h1><h2 id="遇到的问题"><a href="#遇到的问题" class="headerlink" title="遇到的问题"></a>遇到的问题</h2><ul>
+<li>cookie问题 由requests下的session解决</li>
+<li>lxml下的etree负责解析网页数据</li>
+<li>封装账号信息post模拟登录</li>
+<li>在页面中的隐含域下获取请求的参数值，如lt，execution</li>
+</ul>
+<a id="more"></a>
+
+<h2 id="代码编写"><a href="#代码编写" class="headerlink" title="代码编写"></a>代码编写</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">from</span> lxml <span class="keyword">import</span> etree</span><br><span class="line"></span><br><span class="line">login_url = <span class="string">&#x27;http://sso.cczu.edu.cn/sso/login?service=http%3A%2F%2Fs.cczu.edu.cn%2F&#x27;</span></span><br><span class="line">home_url = <span class="string">&#x27;http://219.230.159.132/web_cas/web_cas_login_jwgl.aspx&#x27;</span></span><br><span class="line">grade_url = <span class="string">&#x27;http://219.230.159.132/web_cjgl/cx_cj_xh.aspx&#x27;</span></span><br><span class="line">headers = &#123;</span><br><span class="line">    <span class="string">&#x27;User-Agent&#x27;</span>: <span class="string">&#x27;Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) &#x27;</span></span><br><span class="line">                  <span class="string">&#x27;Chrome/87.0.4280.88 Safari/537.36 Edg/87.0.664.66 &#x27;</span></span><br><span class="line">&#125;</span><br><span class="line">session = requests.session()</span><br><span class="line">login_page_data = etree.HTML(session.get(url=login_url, headers=headers).content.decode())</span><br><span class="line">execution = login_page_data.xpath(<span class="string">&#x27;//input[@name=&quot;execution&quot;]/@value&#x27;</span>)[<span class="number">0</span>]</span><br><span class="line">lt = login_page_data.xpath(<span class="string">&#x27;//input[@name=&quot;lt&quot;]/@value&#x27;</span>)[<span class="number">0</span>]</span><br><span class="line">data = &#123;</span><br><span class="line">    <span class="string">&#x27;username&#x27;</span>: <span class="string">&#x27;学号&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;password&#x27;</span>: <span class="string">&#x27;密码&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;lt&#x27;</span>: lt,</span><br><span class="line">    <span class="string">&#x27;execution&#x27;</span>: execution,</span><br><span class="line">    <span class="string">&#x27;_eventId&#x27;</span>: <span class="string">&#x27;submit&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;useVCode&#x27;</span>: <span class="string">&#x27;false&#x27;</span></span><br><span class="line">&#125;</span><br><span class="line">session.post(url=login_url, data=data, headers=headers)</span><br><span class="line">session.get(url=home_url, headers=headers)</span><br><span class="line">grade_page = session.get(url=grade_url, headers=headers).content.decode()</span><br><span class="line">grade_data = etree.HTML(grade_page)</span><br><span class="line">trs = grade_data.xpath(<span class="string">&#x27;//table[@id=&quot;gvcj1&quot;]/tr[@class=&quot;dg1-item&quot;]&#x27;</span>)</span><br><span class="line"><span class="keyword">for</span> tr <span class="keyword">in</span> trs:</span><br><span class="line">    s_id = tr.xpath(<span class="string">&#x27;./td[1]/text()&#x27;</span>)[<span class="number">0</span>]</span><br><span class="line">    s_name = tr.xpath(<span class="string">&#x27;./td[2]/text()&#x27;</span>)[<span class="number">0</span>]</span><br><span class="line">    s_term = tr.xpath(<span class="string">&#x27;./td[3]/text()&#x27;</span>)[<span class="number">0</span>]</span><br><span class="line">    s_subject = tr.xpath(<span class="string">&#x27;./td[4]/text()&#x27;</span>)[<span class="number">0</span>]</span><br><span class="line">    s_type = tr.xpath(<span class="string">&#x27;./td[5]/text()&#x27;</span>)[<span class="number">0</span>]</span><br><span class="line">    s_grade = tr.xpath(<span class="string">&#x27;./td[6]/text()&#x27;</span>)[<span class="number">0</span>]</span><br><span class="line">    s_properties = tr.xpath(<span class="string">&#x27;./td[7]/text()&#x27;</span>)[<span class="number">0</span>]</span><br><span class="line">    s_point = tr.xpath(<span class="string">&#x27;./td[8]/text()&#x27;</span>)[<span class="number">0</span>]</span><br><span class="line">    s_time = tr.xpath(<span class="string">&#x27;./td[9]/text()&#x27;</span>)[<span class="number">0</span>]</span><br><span class="line">    s_code = tr.xpath(<span class="string">&#x27;./td[10]/text()&#x27;</span>)[<span class="number">0</span>]</span><br><span class="line">    s_hour = tr.xpath(<span class="string">&#x27;./td[11]/text()&#x27;</span>)[<span class="number">0</span>]</span><br><span class="line">    print(<span class="string">&#x27; 学号：&#x27;</span> + s_id + <span class="string">&#x27;\n&#x27;</span>, <span class="string">&#x27;姓名：&#x27;</span> + s_name + <span class="string">&#x27;\n&#x27;</span>, <span class="string">&#x27;学期：&#x27;</span> + s_term + <span class="string">&#x27;\n&#x27;</span>, <span class="string">&#x27;科目：&#x27;</span> + s_subject + <span class="string">&#x27;\n&#x27;</span>,</span><br><span class="line">          <span class="string">&#x27;类别：&#x27;</span> + s_type + <span class="string">&#x27;\n&#x27;</span>, <span class="string">&#x27;学分：&#x27;</span> + s_grade + <span class="string">&#x27;\n&#x27;</span>, <span class="string">&#x27;分数：&#x27;</span> + s_properties + <span class="string">&#x27;\n&#x27;</span>,</span><br><span class="line">          <span class="string">&#x27;性质：&#x27;</span> + s_point + <span class="string">&#x27;\n&#x27;</span>, <span class="string">&#x27;绩点：&#x27;</span> + s_time + <span class="string">&#x27;\n&#x27;</span>,</span><br><span class="line">          <span class="string">&#x27;课程代码：&#x27;</span> + s_code + <span class="string">&#x27;\n&#x27;</span>, <span class="string">&#x27;课时：&#x27;</span> + s_hour + <span class="string">&#x27;\n&#x27;</span>)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>爬虫学习</category>
+      </categories>
+      <tags>
+        <tag>Python</tag>
+        <tag>教务系统</tag>
+        <tag>成绩查询</tag>
       </tags>
   </entry>
   <entry>
@@ -552,6 +699,30 @@
       </tags>
   </entry>
   <entry>
+    <title>爬取教务成绩的另一种姿势</title>
+    <url>/posts/b27af333/</url>
+    <content><![CDATA[<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>之前已经有过一篇爬取成绩的实现blog，是基于学校官网的入口，再进入到教务系统进行查询，中途需要保持session。</p>
+<p>现在发现了一个新的入口：</p>
+<p><img src="https://pic.rmb.bdstatic.com/bjh/f8036105c9a22d9d1dbc3ceb2c97ba79.png"></p>
+<a id="more"></a>
+
+<p>于是乎准备从这里进行成绩的爬取，经过一番分析后，发现爬取的姿势中需要包含一些参数，这些参数在网页的源代码中可以找到，即隐含域的值，input标签的hidden属性。如下图：</p>
+<p><img src="https://pic.rmb.bdstatic.com/bjh/77b2c8168b8a1bd981cace72ae77b5aa.png"></p>
+<p><img src="https://pic.rmb.bdstatic.com/bjh/3ca8b0366ec1acbc996d19fba8d6211c.png"></p>
+<p>这样就需要先使用xpath分析网页源代码，取到想要的值，再作post提交的参数。</p>
+<p>基本实现逻辑就是这样，下面进行代码的编写。</p>
+<h1 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h1><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">import</span> random</span><br><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line"><span class="keyword">from</span> lxml <span class="keyword">import</span> etree</span><br><span class="line"></span><br><span class="line"><span class="comment"># 使用到的url</span></span><br><span class="line">base_url = <span class="string">&#x27;http://202.195.102.33/&#x27;</span></span><br><span class="line">login_url = <span class="string">&#x27;http://202.195.102.33/login_gh.aspx&#x27;</span></span><br><span class="line">home_url = <span class="string">&#x27;http://202.195.102.33/web_xsxk/web_xs_xk_cjcx_fzjh.aspx&#x27;</span></span><br><span class="line">query_url = <span class="string">&#x27;http://202.195.102.33/web_cjgl/web_cj_xscj_cx_jy.aspx&#x27;</span></span><br><span class="line"><span class="comment"># ip代理池</span></span><br><span class="line">proxy_pool = [&#123;<span class="string">&#x27;HTTP&#x27;</span>: <span class="string">&#x27;123.169.124.51:9999&#x27;</span>&#125;, &#123;<span class="string">&#x27;HTTP&#x27;</span>: <span class="string">&#x27;175.43.56.26:9999&#x27;</span>&#125;, &#123;<span class="string">&#x27;HTTP&#x27;</span>: <span class="string">&#x27;113.194.142.137:9999&#x27;</span>&#125;, &#123;<span class="string">&#x27;HTTP&#x27;</span>: <span class="string">&#x27;175.42.68.43:9999&#x27;</span>&#125;, &#123;<span class="string">&#x27;HTTP&#x27;</span>: <span class="string">&#x27;171.35.175.173:9999&#x27;</span>&#125;, &#123;<span class="string">&#x27;HTTP&#x27;</span>: <span class="string">&#x27;113.195.18.159:9999&#x27;</span>&#125;, &#123;<span class="string">&#x27;HTTP&#x27;</span>: <span class="string">&#x27;125.108.112.49:9000&#x27;</span>&#125;, &#123;<span class="string">&#x27;HTTP&#x27;</span>: <span class="string">&#x27;113.195.23.235:9999&#x27;</span>&#125;, &#123;<span class="string">&#x27;HTTP&#x27;</span>: <span class="string">&#x27;121.232.199.237:9000&#x27;</span>&#125;, &#123;<span class="string">&#x27;HTTP&#x27;</span>: <span class="string">&#x27;123.101.231.234:9999&#x27;</span>&#125;]</span><br><span class="line"><span class="comment"># 请求头伪装</span></span><br><span class="line">headers = &#123;</span><br><span class="line">    <span class="string">&#x27;User-Agent&#x27;</span>: <span class="string">&#x27;Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) &#x27;</span></span><br><span class="line">                  <span class="string">&#x27;Chrome/87.0.4280.88 Safari/537.36 Edg/87.0.664.66 &#x27;</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="comment"># 学号 密码 的数据源</span></span><br><span class="line">data = pd.read_excel(io=<span class="string">&#x27;./软件186.xlsx&#x27;</span>, nrows=<span class="number">37</span>)</span><br><span class="line">person = []</span><br><span class="line">grade = []</span><br><span class="line"><span class="comment"># 处理账号数据</span></span><br><span class="line"><span class="keyword">for</span> d <span class="keyword">in</span> data.values:</span><br><span class="line">    person.append(</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="string">&#x27;学号&#x27;</span>: d[<span class="number">1</span>],</span><br><span class="line">            <span class="string">&#x27;身份证号&#x27;</span>: d[<span class="number">4</span>]</span><br><span class="line">        &#125;</span><br><span class="line">    )</span><br><span class="line"><span class="comment"># 循环请求</span></span><br><span class="line"><span class="keyword">for</span> p <span class="keyword">in</span> person:</span><br><span class="line">    proxies = random.choice(proxy_pool)</span><br><span class="line">    session = requests.session()</span><br><span class="line">    base_data = etree.HTML(session.get(url=base_url, headers=headers, proxies=proxies).content.decode())</span><br><span class="line">    __VIEWSTATE = base_data.xpath(<span class="string">&#x27;//input[@id=&quot;__VIEWSTATE&quot;]/@value&#x27;</span>)[<span class="number">0</span>]</span><br><span class="line">    data = &#123;</span><br><span class="line">        <span class="string">&#x27;__VIEWSTATE&#x27;</span>: __VIEWSTATE,</span><br><span class="line">        <span class="string">&#x27;UserName&#x27;</span>: p[<span class="string">&#x27;学号&#x27;</span>],</span><br><span class="line">        <span class="string">&#x27;Password&#x27;</span>: p[<span class="string">&#x27;身份证号&#x27;</span>][-<span class="number">6</span>:],</span><br><span class="line">        <span class="string">&#x27;getpassword&#x27;</span>: <span class="string">&#x27;&#x27;</span></span><br><span class="line">    &#125;</span><br><span class="line">    session.post(url=login_url, data=data, headers=headers, proxies=proxies)</span><br><span class="line">    __VIEWSTATE = etree.HTML(session.get(url=home_url, headers=headers, proxies=proxies).content.decode()).xpath(</span><br><span class="line">        <span class="string">&#x27;//input[@id=&quot;__VIEWSTATE&#x27;</span></span><br><span class="line">        <span class="string">&#x27;&quot;]/@value&#x27;</span>)[<span class="number">0</span>]</span><br><span class="line">    data = &#123;</span><br><span class="line">        <span class="string">&#x27;__VIEWSTATE&#x27;</span>: __VIEWSTATE,</span><br><span class="line">        <span class="string">&#x27;ImageButton2.x&#x27;</span>: <span class="string">&#x27;47&#x27;</span>,</span><br><span class="line">        <span class="string">&#x27;ImageButton2.y&#x27;</span>: <span class="string">&#x27;55&#x27;</span></span><br><span class="line">    &#125;</span><br><span class="line">    session.post(url=home_url, headers=headers, data=data, proxies=proxies)</span><br><span class="line">    session.get(url=query_url, headers=headers, proxies=proxies).content.decode()</span><br><span class="line">    __VIEWSTATE = etree.HTML(session.get(url=query_url, headers=headers, proxies=proxies).content.decode()).xpath(</span><br><span class="line">        <span class="string">&#x27;//input[@id=&quot;__VIEWSTATE&quot;]/@value&#x27;</span>)[<span class="number">0</span>]</span><br><span class="line">    data = &#123;</span><br><span class="line">        <span class="string">&#x27;ScriptManager1&#x27;</span>: <span class="string">&#x27;UpdatePanel1|Btcx&#x27;</span>,</span><br><span class="line">        <span class="string">&#x27;__EVENTTARGET&#x27;</span>: <span class="string">&#x27;&#x27;</span>,</span><br><span class="line">        <span class="string">&#x27;__EVENTARGUMENT&#x27;</span>: <span class="string">&#x27;&#x27;</span>,</span><br><span class="line">        <span class="string">&#x27;__VIEWSTATE&#x27;</span>: __VIEWSTATE,</span><br><span class="line">        <span class="string">&#x27;Btcx&#x27;</span>: <span class="string">&#x27;查询成绩&#x27;</span></span><br><span class="line">    &#125;</span><br><span class="line">    headers = &#123;</span><br><span class="line">        <span class="string">&#x27;User-Agent&#x27;</span>: <span class="string">&#x27;Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) &#x27;</span></span><br><span class="line">                      <span class="string">&#x27;Chrome/87.0.4280.88 Safari/537.36 Edg/87.0.664.66 &#x27;</span>,</span><br><span class="line">        <span class="string">&#x27;X-MicrosoftAjax&#x27;</span>: <span class="string">&#x27;Delta=true&#x27;</span></span><br><span class="line">    &#125;</span><br><span class="line">    query_page = session.post(url=query_url, headers=headers, data=data, proxies=proxies).content.decode()</span><br><span class="line">    table = etree.HTML(query_page)</span><br><span class="line">    trs = table.xpath(<span class="string">&#x27;//table[@id=&quot;gvcj1&quot;]/tr[@class=&quot;dg1-item&quot;]&#x27;</span>)</span><br><span class="line">    count = <span class="number">1</span></span><br><span class="line">    td_date = &#123;&#125;</span><br><span class="line">    <span class="keyword">for</span> td <span class="keyword">in</span> trs:</span><br><span class="line">        name = td.xpath(<span class="string">&#x27;./td[2]/text()&#x27;</span>)[<span class="number">0</span>]</span><br><span class="line">        subject = td.xpath(<span class="string">&#x27;./td[4]/text()&#x27;</span>)[<span class="number">0</span>]</span><br><span class="line">        score = td.xpath(<span class="string">&#x27;./td[7]/text()&#x27;</span>)[<span class="number">0</span>]</span><br><span class="line">        <span class="keyword">if</span> count == <span class="number">1</span>:</span><br><span class="line">            print(<span class="string">&#x27;正在爬取&#123;&#125;的成绩...&#x27;</span>.<span class="built_in">format</span>(name))</span><br><span class="line">            td_date[<span class="string">&#x27;姓名&#x27;</span>] = name</span><br><span class="line">        td_date[subject] = score</span><br><span class="line">        count += <span class="number">1</span></span><br><span class="line">    grade.append(td_date)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 持久化存储</span></span><br><span class="line">save = pd.DataFrame(grade)</span><br><span class="line">save.to_csv(<span class="string">&#x27;软件186班级成绩.csv&#x27;</span>, index=<span class="literal">False</span>, encoding=<span class="string">&#x27;utf-8-sig&#x27;</span>)</span><br></pre></td></tr></table></figure>
+<h1 id="结果截图"><a href="#结果截图" class="headerlink" title="结果截图"></a>结果截图</h1><p><img src="https://pic.rmb.bdstatic.com/bjh/46610b138dc5600651538ba44fc9834b.png"></p>
+]]></content>
+      <categories>
+        <category>爬虫学习</category>
+      </categories>
+      <tags>
+        <tag>Python</tag>
+        <tag>成绩查询</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>爬取b站视频弹幕并制作词云一</title>
     <url>/posts/fc448f83/</url>
     <content><![CDATA[<font color=#999AAA >
@@ -587,30 +758,6 @@
         <tag>Python</tag>
         <tag>B站</tag>
         <tag>弹幕</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>爬取教务成绩的另一种姿势</title>
-    <url>/posts/b27af333/</url>
-    <content><![CDATA[<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>之前已经有过一篇爬取成绩的实现blog，是基于学校官网的入口，再进入到教务系统进行查询，中途需要保持session。</p>
-<p>现在发现了一个新的入口：</p>
-<p><img src="https://pic.rmb.bdstatic.com/bjh/f8036105c9a22d9d1dbc3ceb2c97ba79.png"></p>
-<a id="more"></a>
-
-<p>于是乎准备从这里进行成绩的爬取，经过一番分析后，发现爬取的姿势中需要包含一些参数，这些参数在网页的源代码中可以找到，即隐含域的值，input标签的hidden属性。如下图：</p>
-<p><img src="https://pic.rmb.bdstatic.com/bjh/77b2c8168b8a1bd981cace72ae77b5aa.png"></p>
-<p><img src="https://pic.rmb.bdstatic.com/bjh/3ca8b0366ec1acbc996d19fba8d6211c.png"></p>
-<p>这样就需要先使用xpath分析网页源代码，取到想要的值，再作post提交的参数。</p>
-<p>基本实现逻辑就是这样，下面进行代码的编写。</p>
-<h1 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h1><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">import</span> random</span><br><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line"><span class="keyword">from</span> lxml <span class="keyword">import</span> etree</span><br><span class="line"></span><br><span class="line"><span class="comment"># 使用到的url</span></span><br><span class="line">base_url = <span class="string">&#x27;http://202.195.102.33/&#x27;</span></span><br><span class="line">login_url = <span class="string">&#x27;http://202.195.102.33/login_gh.aspx&#x27;</span></span><br><span class="line">home_url = <span class="string">&#x27;http://202.195.102.33/web_xsxk/web_xs_xk_cjcx_fzjh.aspx&#x27;</span></span><br><span class="line">query_url = <span class="string">&#x27;http://202.195.102.33/web_cjgl/web_cj_xscj_cx_jy.aspx&#x27;</span></span><br><span class="line"><span class="comment"># ip代理池</span></span><br><span class="line">proxy_pool = [&#123;<span class="string">&#x27;HTTP&#x27;</span>: <span class="string">&#x27;123.169.124.51:9999&#x27;</span>&#125;, &#123;<span class="string">&#x27;HTTP&#x27;</span>: <span class="string">&#x27;175.43.56.26:9999&#x27;</span>&#125;, &#123;<span class="string">&#x27;HTTP&#x27;</span>: <span class="string">&#x27;113.194.142.137:9999&#x27;</span>&#125;, &#123;<span class="string">&#x27;HTTP&#x27;</span>: <span class="string">&#x27;175.42.68.43:9999&#x27;</span>&#125;, &#123;<span class="string">&#x27;HTTP&#x27;</span>: <span class="string">&#x27;171.35.175.173:9999&#x27;</span>&#125;, &#123;<span class="string">&#x27;HTTP&#x27;</span>: <span class="string">&#x27;113.195.18.159:9999&#x27;</span>&#125;, &#123;<span class="string">&#x27;HTTP&#x27;</span>: <span class="string">&#x27;125.108.112.49:9000&#x27;</span>&#125;, &#123;<span class="string">&#x27;HTTP&#x27;</span>: <span class="string">&#x27;113.195.23.235:9999&#x27;</span>&#125;, &#123;<span class="string">&#x27;HTTP&#x27;</span>: <span class="string">&#x27;121.232.199.237:9000&#x27;</span>&#125;, &#123;<span class="string">&#x27;HTTP&#x27;</span>: <span class="string">&#x27;123.101.231.234:9999&#x27;</span>&#125;]</span><br><span class="line"><span class="comment"># 请求头伪装</span></span><br><span class="line">headers = &#123;</span><br><span class="line">    <span class="string">&#x27;User-Agent&#x27;</span>: <span class="string">&#x27;Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) &#x27;</span></span><br><span class="line">                  <span class="string">&#x27;Chrome/87.0.4280.88 Safari/537.36 Edg/87.0.664.66 &#x27;</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="comment"># 学号 密码 的数据源</span></span><br><span class="line">data = pd.read_excel(io=<span class="string">&#x27;./软件186.xlsx&#x27;</span>, nrows=<span class="number">37</span>)</span><br><span class="line">person = []</span><br><span class="line">grade = []</span><br><span class="line"><span class="comment"># 处理账号数据</span></span><br><span class="line"><span class="keyword">for</span> d <span class="keyword">in</span> data.values:</span><br><span class="line">    person.append(</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="string">&#x27;学号&#x27;</span>: d[<span class="number">1</span>],</span><br><span class="line">            <span class="string">&#x27;身份证号&#x27;</span>: d[<span class="number">4</span>]</span><br><span class="line">        &#125;</span><br><span class="line">    )</span><br><span class="line"><span class="comment"># 循环请求</span></span><br><span class="line"><span class="keyword">for</span> p <span class="keyword">in</span> person:</span><br><span class="line">    proxies = random.choice(proxy_pool)</span><br><span class="line">    session = requests.session()</span><br><span class="line">    base_data = etree.HTML(session.get(url=base_url, headers=headers, proxies=proxies).content.decode())</span><br><span class="line">    __VIEWSTATE = base_data.xpath(<span class="string">&#x27;//input[@id=&quot;__VIEWSTATE&quot;]/@value&#x27;</span>)[<span class="number">0</span>]</span><br><span class="line">    data = &#123;</span><br><span class="line">        <span class="string">&#x27;__VIEWSTATE&#x27;</span>: __VIEWSTATE,</span><br><span class="line">        <span class="string">&#x27;UserName&#x27;</span>: p[<span class="string">&#x27;学号&#x27;</span>],</span><br><span class="line">        <span class="string">&#x27;Password&#x27;</span>: p[<span class="string">&#x27;身份证号&#x27;</span>][-<span class="number">6</span>:],</span><br><span class="line">        <span class="string">&#x27;getpassword&#x27;</span>: <span class="string">&#x27;&#x27;</span></span><br><span class="line">    &#125;</span><br><span class="line">    session.post(url=login_url, data=data, headers=headers, proxies=proxies)</span><br><span class="line">    __VIEWSTATE = etree.HTML(session.get(url=home_url, headers=headers, proxies=proxies).content.decode()).xpath(</span><br><span class="line">        <span class="string">&#x27;//input[@id=&quot;__VIEWSTATE&#x27;</span></span><br><span class="line">        <span class="string">&#x27;&quot;]/@value&#x27;</span>)[<span class="number">0</span>]</span><br><span class="line">    data = &#123;</span><br><span class="line">        <span class="string">&#x27;__VIEWSTATE&#x27;</span>: __VIEWSTATE,</span><br><span class="line">        <span class="string">&#x27;ImageButton2.x&#x27;</span>: <span class="string">&#x27;47&#x27;</span>,</span><br><span class="line">        <span class="string">&#x27;ImageButton2.y&#x27;</span>: <span class="string">&#x27;55&#x27;</span></span><br><span class="line">    &#125;</span><br><span class="line">    session.post(url=home_url, headers=headers, data=data, proxies=proxies)</span><br><span class="line">    session.get(url=query_url, headers=headers, proxies=proxies).content.decode()</span><br><span class="line">    __VIEWSTATE = etree.HTML(session.get(url=query_url, headers=headers, proxies=proxies).content.decode()).xpath(</span><br><span class="line">        <span class="string">&#x27;//input[@id=&quot;__VIEWSTATE&quot;]/@value&#x27;</span>)[<span class="number">0</span>]</span><br><span class="line">    data = &#123;</span><br><span class="line">        <span class="string">&#x27;ScriptManager1&#x27;</span>: <span class="string">&#x27;UpdatePanel1|Btcx&#x27;</span>,</span><br><span class="line">        <span class="string">&#x27;__EVENTTARGET&#x27;</span>: <span class="string">&#x27;&#x27;</span>,</span><br><span class="line">        <span class="string">&#x27;__EVENTARGUMENT&#x27;</span>: <span class="string">&#x27;&#x27;</span>,</span><br><span class="line">        <span class="string">&#x27;__VIEWSTATE&#x27;</span>: __VIEWSTATE,</span><br><span class="line">        <span class="string">&#x27;Btcx&#x27;</span>: <span class="string">&#x27;查询成绩&#x27;</span></span><br><span class="line">    &#125;</span><br><span class="line">    headers = &#123;</span><br><span class="line">        <span class="string">&#x27;User-Agent&#x27;</span>: <span class="string">&#x27;Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) &#x27;</span></span><br><span class="line">                      <span class="string">&#x27;Chrome/87.0.4280.88 Safari/537.36 Edg/87.0.664.66 &#x27;</span>,</span><br><span class="line">        <span class="string">&#x27;X-MicrosoftAjax&#x27;</span>: <span class="string">&#x27;Delta=true&#x27;</span></span><br><span class="line">    &#125;</span><br><span class="line">    query_page = session.post(url=query_url, headers=headers, data=data, proxies=proxies).content.decode()</span><br><span class="line">    table = etree.HTML(query_page)</span><br><span class="line">    trs = table.xpath(<span class="string">&#x27;//table[@id=&quot;gvcj1&quot;]/tr[@class=&quot;dg1-item&quot;]&#x27;</span>)</span><br><span class="line">    count = <span class="number">1</span></span><br><span class="line">    td_date = &#123;&#125;</span><br><span class="line">    <span class="keyword">for</span> td <span class="keyword">in</span> trs:</span><br><span class="line">        name = td.xpath(<span class="string">&#x27;./td[2]/text()&#x27;</span>)[<span class="number">0</span>]</span><br><span class="line">        subject = td.xpath(<span class="string">&#x27;./td[4]/text()&#x27;</span>)[<span class="number">0</span>]</span><br><span class="line">        score = td.xpath(<span class="string">&#x27;./td[7]/text()&#x27;</span>)[<span class="number">0</span>]</span><br><span class="line">        <span class="keyword">if</span> count == <span class="number">1</span>:</span><br><span class="line">            print(<span class="string">&#x27;正在爬取&#123;&#125;的成绩...&#x27;</span>.<span class="built_in">format</span>(name))</span><br><span class="line">            td_date[<span class="string">&#x27;姓名&#x27;</span>] = name</span><br><span class="line">        td_date[subject] = score</span><br><span class="line">        count += <span class="number">1</span></span><br><span class="line">    grade.append(td_date)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 持久化存储</span></span><br><span class="line">save = pd.DataFrame(grade)</span><br><span class="line">save.to_csv(<span class="string">&#x27;软件186班级成绩.csv&#x27;</span>, index=<span class="literal">False</span>, encoding=<span class="string">&#x27;utf-8-sig&#x27;</span>)</span><br></pre></td></tr></table></figure>
-<h1 id="结果截图"><a href="#结果截图" class="headerlink" title="结果截图"></a>结果截图</h1><p><img src="https://pic.rmb.bdstatic.com/bjh/46610b138dc5600651538ba44fc9834b.png"></p>
-]]></content>
-      <categories>
-        <category>爬虫学习</category>
-      </categories>
-      <tags>
-        <tag>Python</tag>
-        <tag>成绩查询</tag>
       </tags>
   </entry>
   <entry>
@@ -771,58 +918,6 @@
       <tags>
         <tag>Python</tag>
         <tag>链家</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>微信聊天记录数据库解密并导出</title>
-    <url>/posts/7de13740/</url>
-    <content><![CDATA[<h1 id="微信数据库解码"><a href="#微信数据库解码" class="headerlink" title="微信数据库解码"></a>微信数据库解码</h1><p><img src="https://pic.rmb.bdstatic.com/bjh/bfe8f02b3a0bcb12f69389140194efc5.png"></p>
-<a id="more"></a>
-
-<p>上图为导出后的聊天信息数据的表格文件，接下来请看我的操作步骤。</p>
-<h2 id="工具准备"><a href="#工具准备" class="headerlink" title="工具准备"></a>工具准备</h2><ol>
-<li>夜神模拟器 并安装微信</li>
-<li>PC版微信 以及 你正在使用的有聊天记录的手机（Android IOS都可以）</li>
-<li>SQLCipher 用来解密数据库</li>
-</ol>
-<h2 id="获取微信的数据库文件"><a href="#获取微信的数据库文件" class="headerlink" title="获取微信的数据库文件"></a>获取微信的数据库文件</h2><p>首先用正在使用的手机登陆微信，再登录PC版微信（两个设备需要在同一局域网下），然后使用备份与恢复。</p>
-<p><img src="https://pic.rmb.bdstatic.com/bjh/23bd5fb3ff994c45111a1a8fd425bb1d.png"></p>
-<p>然后选择备份连天记录到电脑。</p>
-<p><img src="https://pic.rmb.bdstatic.com/bjh/3c921bdb7183459aa5827f345f971317.png"></p>
-<p>在手机上确定，并可以指定聊天记录或者全部备份。</p>
-<p><img src="https://pic.rmb.bdstatic.com/bjh/244a76ece3d858e8fadf77ecf1e87355.png"></p>
-<p>这是保存在电脑上的备份数据文件，因为比较难于解密和分析，所以我们不做处理。接下来将聊天记录恢复到安卓模拟器中，再进行数据库的提取。</p>
-<p><img src="https://pic.rmb.bdstatic.com/bjh/19ca7fc5cf2ec8da7fd62b5fb3bce215.png"></p>
-<p>登录好模拟器上的微信后，选择恢复聊天记录到手机，并在模拟器上确认。恢复聊天记录完成后，打开文件管理器。</p>
-<p><img src="https://pic.rmb.bdstatic.com/bjh/ea86ff2d3983193994c061051c5bdac4.png"></p>
-<p>数据库文件在<strong>根目录/data/data/com.tencent.mm/MicroMsg</strong>中。加密的数据库文件在两个长名字文件夹之一中，优先选择<strong>修改日期最新</strong>的那个。</p>
-<p><img src="https://pic.rmb.bdstatic.com/bjh/1a01fce9f73c6400b00b85d18d05dd64.png"></p>
-<p><img src="https://pic.rmb.bdstatic.com/bjh/7cd632942a41f87df4b7391b61e71f93.png"></p>
-<h2 id="获取数据库密码"><a href="#获取数据库密码" class="headerlink" title="获取数据库密码"></a>获取数据库密码</h2><p>在下图的路径中找到对应的xml文件，其中有账号对应的UIN号。</p>
-<p><img src="https://pic.rmb.bdstatic.com/bjh/2dd5ad072b0d65deb748319fe9ad97e5.png"></p>
-<p><img src="https://pic.rmb.bdstatic.com/bjh/8ed9911140cdea860509418012ff37bd.png"></p>
-<p>在模拟器设置中查看自己的IMEI号。</p>
-<p><img src="https://pic.rmb.bdstatic.com/bjh/1762bcfa593d9675137686277f87f2bb.png"></p>
-<p>在加密网站中，将IMEI和UIN号进行拼接（<strong>保留负号</strong>），加密方式选择<strong>32位小</strong>。</p>
-<p><a href="https://link.zhihu.com/?target=https://tool.chinaz.com/tools/md5.aspx">MD5在线加密/解密/破解 - 站长工具</a></p>
-<p><img src="https://pic.rmb.bdstatic.com/bjh/c76dda4055f8b30e2001b55e0bcf8786.png"></p>
-<h2 id="数据库处理"><a href="#数据库处理" class="headerlink" title="数据库处理"></a>数据库处理</h2><p>根据拿到的密码查看数据库。</p>
-<p><img src="https://pic.rmb.bdstatic.com/bjh/79523907938a6f6318d818b9989bb4e5.png"></p>
-<p><img src="https://pic.rmb.bdstatic.com/bjh/f10b4d50439b4236899764df097623f6.png"></p>
-<p>导出为表格文件。</p>
-<p><img src="https://pic.rmb.bdstatic.com/bjh/cb7088579a9c22beb0e4e08b9a3510cd.png"></p>
-<h2 id="密码不对的情况"><a href="#密码不对的情况" class="headerlink" title="密码不对的情况"></a>密码不对的情况</h2><p>如果出现这样的情况说明你的密码不对。</p>
-<p><img src="https://pic.rmb.bdstatic.com/bjh/6a17ff1af5205835e77b51b31fac58ae.png"></p>
-<p>可以尝试使用MD5加密 1234567890ABCDEF + UIN生成的前七位字符试一下。</p>
-<p><img src="https://pic.rmb.bdstatic.com/bjh/80f2edfa24b314dc804ce9fe4574df0b.png"></p>
-<h2 id="聊天数据整理"><a href="#聊天数据整理" class="headerlink" title="聊天数据整理"></a>聊天数据整理</h2><p>使用python的jieba分词等，对csv文件进行数据清洗，因为太简单就不附上代码了，下面直接放上成品图。</p>
-<p><img src="https://pic.rmb.bdstatic.com/bjh/82b8d74eab4559b4a485b3a49291c3d3.png"></p>
-]]></content>
-      <categories>
-        <category>学习</category>
-      </categories>
-      <tags>
-        <tag>Python</tag>
       </tags>
   </entry>
   <entry>
